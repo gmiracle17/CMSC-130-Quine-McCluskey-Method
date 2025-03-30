@@ -1,1 +1,1 @@
-# CMSC-121-MANGA
+# CMSC-130-Quine-McCluskey Web App
