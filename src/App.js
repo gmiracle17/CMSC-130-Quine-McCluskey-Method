@@ -3,7 +3,6 @@ import './App.css';
 import Input from './components/Input.js';
 import Pairwise from './components/Pairwise.js'; // Assuming you have a Pairwise component
 import Table from './components/Table.js'; // Assuming you have this component
-import PrimeImplicant from './components/PrimeImplicant.js'; // Assuming you have this component
 import POS from './components/POS.js'; // Assuming you have this component
 
 function App() {
@@ -17,8 +16,6 @@ function App() {
                 return <Pairwise />;
             case 'primeImplicantTable':
                 return <Table />;
-            case 'primeImplicantSelection':
-                return <PrimeImplicant />;
             case 'finalExpressions':
                 return <POS />;
             default:
@@ -49,12 +46,6 @@ function App() {
                     onClick={() => setActiveTab('primeImplicantTable')}
                 >
                     Prime Implicant Table
-                </div>
-                <div 
-                    className={`tab ${activeTab === 'primeImplicantSelection' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('primeImplicantSelection')}
-                >
-                    Prime Implicant Selection
                 </div>
                 <div 
                     className={`tab ${activeTab === 'finalExpressions' ? 'active' : ''}`} 
