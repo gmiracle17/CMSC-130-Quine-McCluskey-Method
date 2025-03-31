@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Comic Sans Regular';
+  src: local("Comic Sans"), url('./components/fonts/Ldfcomicsans-jj7l.ttf'), format("opentype");
+}
+
+body {
+  margin: 0;
+  color: white;
+  background-color: #2e2e34;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
