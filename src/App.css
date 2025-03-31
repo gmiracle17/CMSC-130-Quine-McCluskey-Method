@@ -64,6 +64,7 @@ a {
 .tableHeader {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   margin-top: 15px;
   margin-bottom: 10px;
 }
@@ -71,14 +72,20 @@ a {
 .tableRow {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .primeImplicantEntries, .mintermEntries, .xEntries {
   text-align: center;
   box-sizing: border-box;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: #292b30;
   margin: 1px;
+}
+
+.tableColumn, .mintermColumn {
+  margin-inline: 1px;
+  border-radius: 10px;
 }
 
 .tableColumn, .primeImplicantEntries, .mintermEntries {
