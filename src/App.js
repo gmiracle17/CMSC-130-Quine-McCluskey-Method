@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './App.css';
 import Input from './components/Input.js';
-import Pairwise from './components/Pairwise.js'; // Assuming you have a Pairwise component
-import Table from './components/Table.js'; // Assuming you have this component
-import POS from './components/POS.js'; // Assuming you have this component
+import Pairwise from './components/Pairwise.js';
+import Table from './components/Table.js';
+import POS from './components/POS.js';
 
 function App() {
     const [activeTab, setActiveTab] = useState('input');
