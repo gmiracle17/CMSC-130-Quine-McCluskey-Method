@@ -1,3 +1,4 @@
+// to Future Gich na maraming time on her hands: don't you dare tamarin na iedit css nito it's ugly af pagod lang ako kaya d ko tatapusin this week
 import React from 'react';
 import '../App.css';
 
