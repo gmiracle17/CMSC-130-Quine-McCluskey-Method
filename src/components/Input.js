@@ -1,4 +1,5 @@
 import { useState } from "react"
+import './Input.css';
 
 function InputSection({setActiveTab, setMintermsArray, setVariablesArray}) {
     const[minterms, setMinterms] = useState(""); 

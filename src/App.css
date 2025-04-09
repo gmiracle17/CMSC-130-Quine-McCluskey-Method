@@ -16,6 +16,9 @@
 
 .App-content {
   padding: 5vmin;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
 }
 
 .App-tabs {
