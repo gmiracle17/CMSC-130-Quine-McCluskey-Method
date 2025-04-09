@@ -1,21 +1,19 @@
 import { useState } from "react"
 
-function InputSection() {
+function InputSection({setActiveTab, setMintermsArray, setVariablesArray}) {
     const[minterms, setMinterms] = useState(""); 
     const[variables, setVariables] = useState(""); 
 
     return (
-        <>
         <div className="input-container">
-            <h1>Quine-McCluskey Method Solver</h1>
+            <h1>Input Minterms and Variables</h1>
             <div className="sub-container">
                 <InputComponent label="Minterms" value={minterms} retrieveInput={setMinterms} /> 
                 <InputComponent label="Variables" value={variables} retrieveInput={setVariables} />
-                <SolveButton HandleInputs={() => HandleInputs(minterms, variables)}/>
+                <SolveButton minterms={minterms} variables = {variables} HandleInputs={() => HandleInputs(minterms, variables)} setMintermsArray={setMintermsArray} setVariablesArray={setVariablesArray} setActiveTab={setActiveTab}/>
             </div>
 
         </div>
-        </>
         
     ); 
 }
@@ -35,7 +33,7 @@ function InputComponent({label, value, retrieveInput}) {
 
 }
 
-function SolveButton({HandleInputs}) {
+function SolveButton({minterms, variables, HandleInputs, setMintermsArray, setVariablesArray, setActiveTab}) {
 
     /* 
     Have an array of text
@@ -44,6 +42,16 @@ function SolveButton({HandleInputs}) {
     [mintermsFormatCorrect, noMintermDuplicates, noNonDigit, variablesFormatCorrect, noNonLetter, noVariableDuplicates, sufficientVariables]
     */
    const[errorText, setErrorText] = useState(''); 
+
+   function setArrays() {
+        let variablesArray = []; 
+        for(let index = 0; index < variables.length; index++) {
+            variablesArray.push(variables.charAt(index));
+        }
+        setVariablesArray(variablesArray); 
+        setMintermsArray(minterms.split(',')); 
+        
+   }
 
     function onButtonClick() {
         let handleInputsArray = HandleInputs(); 
@@ -55,6 +63,8 @@ function SolveButton({HandleInputs}) {
         }
 
         if (message === '') {
+            setArrays(); 
+            setActiveTab('pairwise'); 
             console.log("Proceed to next step"); 
         } 
         else {
@@ -91,8 +101,6 @@ function HandleInputs(minterms, variables) {
 
     minterms = minterms.trim(); 
     let mintermsArray = minterms.split(','); 
-    console.log(mintermsArray); 
-
 
     for (let index = 0; index < mintermsArray.length; index++) {
         let element = parseFloat(mintermsArray[index])
@@ -175,8 +183,4 @@ Invalid inputs that must be handled
 - not separated with commas in minterms
 - Insufficient variables 
 - Variables separated by space
-
-- Next thing to do: Decide if you want to break the input section into separate components or not
-- Pwedeng iisang component nalang yung MintermsInput and VariablesInput
-
 */
