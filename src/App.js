@@ -1,10 +1,10 @@
 import './App.css';
-import Input from './Input.js'
+import InputSection from './components/InputSection.js'
 
 function App() {
   return (
     <div className="App">
-      <Input />
+      <InputSection />
     </div>
   );
 }

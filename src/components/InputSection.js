@@ -5,46 +5,34 @@ function InputSection() {
     const[variables, setVariables] = useState(""); 
 
     return (
+        <>
         <div className="input-container">
             <h1>Quine-McCluskey Method Solver</h1>
             <div className="sub-container">
-                <MintermsInput value={minterms} retrieveMinterms={setMinterms}/>
-                <VariablesInput value={variables} retrieveVariables={setVariables}/>
+                <InputComponent label="Minterms" value={minterms} retrieveInput={setMinterms} /> 
+                <InputComponent label="Variables" value={variables} retrieveInput={setVariables} />
                 <SolveButton HandleInputs={() => HandleInputs(minterms, variables)}/>
             </div>
 
         </div>
+        </>
+        
     ); 
 }
 
-function MintermsInput({value, retrieveMinterms}) {
-
+function InputComponent({label, value, retrieveInput}) {
     function handleChange(event) {
-        retrieveMinterms(event.target.value); 
+        retrieveInput(event.target.value); 
     }
 
     return(
         <div>
-            <label>Minterms</label>
+            <label>{label}</label>
             <input type="text" value={value} onChange={handleChange}></input>
             <p>{value}</p>
         </div>
     )
 
-}
-
-function VariablesInput({value, retrieveVariables}) {
-
-    function handleChange(event) {
-        retrieveVariables(event.target.value); 
-    }
-
-    return (
-        <div>
-            <label>Variables</label>
-            <input type="text" value={value} onChange={handleChange}></input>
-        </div>
-    )
 }
 
 function SolveButton({HandleInputs}) {
@@ -55,22 +43,25 @@ function SolveButton({HandleInputs}) {
     Connect them
     [mintermsFormatCorrect, noMintermDuplicates, noNonDigit, variablesFormatCorrect, noNonLetter, noVariableDuplicates, sufficientVariables]
     */
+   const[errorText, setErrorText] = useState(''); 
 
     function onButtonClick() {
         let handleInputsArray = HandleInputs(); 
-        let errorText = ''; 
+        let message = ''; 
         for(let index = 0; index < handleInputsArray.length; index++) {
             if (handleInputsArray[index] !== '') {
-                errorText = errorText + handleInputsArray[index] + '. '; 
+                message = message + handleInputsArray[index] + '. '; 
             }
         }
 
-        if (errorText === '') {
+        if (message === '') {
             console.log("Proceed to next step"); 
         } 
         else {
-            errorText = errorText + "Please try again."
+            message = message + "Please try again."
         }
+
+        setErrorText(message); 
 
     }
 
@@ -100,11 +91,13 @@ function HandleInputs(minterms, variables) {
 
     minterms = minterms.trim(); 
     let mintermsArray = minterms.split(','); 
+    console.log(mintermsArray); 
+
 
     for (let index = 0; index < mintermsArray.length; index++) {
         let element = parseFloat(mintermsArray[index])
         if(!Number.isInteger(element) || element < 0) {
-            nonDigitMessage = 'Minterms should only be positive integers'; 
+            nonDigitMessage = 'Incorrect minterms input format. Minterms inputted should only be positive integers separated with commas with no space'; 
         } 
         else {
             mintermsArray[index] = parseFloat(mintermsArray[index]); 
@@ -113,11 +106,11 @@ function HandleInputs(minterms, variables) {
 
     const mintermsDuplicates = mintermsArray.filter((item, index) => mintermsArray.indexOf(item) !== index)
 
-    if (mintermsDuplicates.length !== 0) {
+    if (mintermsDuplicates.length !== 0 && nonDigitMessage === '') {
         mintermDuplicatesMesage = 'Minterms should have no duplicates'; 
     }
 
-    if (noNonDigit === true) {
+    if (mintermsDuplicates.length === 0) {
         mintermsArray.sort(); 
         maxNumber = mintermsArray.at(-1); 
     }
@@ -157,7 +150,7 @@ function HandleInputs(minterms, variables) {
         variableDuplicatesMessage = 'Variables should have no duplicates'; 
     }
 
-    if (noVariableDuplicates === true) {
+    if (variablesDuplicates.length === 0) {
         if (Math.pow(2, variablesArray.length) - 1 < maxNumber) {
             let quantityVariables = variablesArray.length; 
             while(Math.pow(2, quantityVariables) - 1 < maxNumber) {
