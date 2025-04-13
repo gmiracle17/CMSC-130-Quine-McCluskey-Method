@@ -50,7 +50,12 @@ function SolveButton({minterms, variables, HandleInputs, setMintermsArray, setVa
             variablesArray.push(variables.charAt(index));
         }
         setVariablesArray(variablesArray); 
-        setMintermsArray(minterms.split(',')); 
+        let mintermsArray = minterms.split(','); 
+        for(let index = 0; index < mintermsArray.length; index++) {
+            mintermsArray[index] = parseFloat(mintermsArray[index]);
+        }
+
+        setMintermsArray(mintermsArray); 
         
    }
 
@@ -184,8 +189,4 @@ Invalid inputs that must be handled
 - not separated with commas in minterms
 - Insufficient variables 
 - Variables separated by space
-*/
-
-/* 
-To be pushed
 */

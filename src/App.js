@@ -9,13 +9,15 @@ function App() {
     const [activeTab, setActiveTab] = useState('input');
     const[mintermsArray, setMintermsArray] = useState(""); 
     const[variablesArray, setVariablesArray] = useState(""); 
+    const[binaryList, setBinaryList] = useState([]); 
+    const[mintermsList, setMintermsList] = useState([]); 
 
     const renderContent = () => {
         switch (activeTab) {
             case 'input':
                 return <Input setActiveTab={setActiveTab} setMintermsArray={setMintermsArray} setVariablesArray={setVariablesArray}/>;
             case 'pairwise':
-                return <Pairwise mintermsArray={mintermsArray} variablesArray={variablesArray}/>;
+                return <Pairwise mintermsArray={mintermsArray} variablesArray={variablesArray} setBinaryList={setBinaryList} setMintermsList={setMintermsList}/>;
             case 'primeImplicantTable':
                 return <Table />;
             case 'finalExpressions':
@@ -64,7 +66,3 @@ function App() {
 }
 
 export default App;
-
-/* 
-To be pushed
-*/
