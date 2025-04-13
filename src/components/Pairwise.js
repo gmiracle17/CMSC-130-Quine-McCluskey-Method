@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
+import './Pairwise.css';
 
 function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList}) {
     
@@ -7,19 +8,9 @@ function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList
     const complementMintermsArray = allMinterms.filter(m => !mintermsArray.includes(m));
 
     let allTables = []; 
-    let groupMap = createGroupMap(mintermsArray, variablesArray); 
+    let groupMap = createGroupMap(complementMintermsArray, variablesArray); 
     allTables.push(groupMap);
     let primeImplicantsList = []; 
-    console.log('---------------------------------')
-    
-    /* 
-    console.log('Groupmap Entries: ', [...groupMap.entries()]); 
-    console.log('MintermsArray', mintermsArray);
-    console.log('AllMinterms: ', allMinterms); 
-    console.log('ComplementMinterms: ', complementMintermsArray); 
-    console.log('Binary equivalent: ', getBinaryEquivalent(2, variablesArray)); 
-    console.log(groupMap);
-    */ 
 
     while (true) {
         let matchedPairsMap = new Map(); 
@@ -57,7 +48,7 @@ function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList
       }, []);
 
     return (
-        <div>
+        <div className='pairwise-container'>
             <p>Pairwise Simplification</p>
             <p>This is done by comparing the minterms of n and n+1 and pairing them up if they differ by only 1 variable</p>
             {
@@ -79,7 +70,7 @@ class MintermObject {
 
 function SimplificationTable({groupMap, index, variablesArray, getVariableEquivalent}) {
     return(
-        <div>
+        <div className='table-container'>
             <p>{(index === 0) ? '' : 'Round ' + index + ' Pairing'}</p>
             <table>
                 <thead>
