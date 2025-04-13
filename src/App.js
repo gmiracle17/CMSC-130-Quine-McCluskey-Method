@@ -19,7 +19,7 @@ function App() {
             case 'pairwise':
                 return <Pairwise mintermsArray={mintermsArray} variablesArray={variablesArray} setBinaryList={setBinaryList} setMintermsList={setMintermsList}/>;
             case 'primeImplicantTable':
-                return <Table />;
+                return <Table mintermsList={mintermsList} binaryList={binaryList}/>;
             case 'finalExpressions':
                 return <POS />;
             default:
