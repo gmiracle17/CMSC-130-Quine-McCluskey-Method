@@ -6,7 +6,9 @@ import Table from './components/Table.js';
 import POS from './components/POS.js';
 
 function App() {
-    const [activeTab, setActiveTab] = useState('input');
+    const[mintermsInput, setMintermsInput] = useState(""); 
+    const[variablesInput, setVariablesInput] = useState(""); 
+    const[activeTab, setActiveTab] = useState('input');
     const[mintermsArray, setMintermsArray] = useState(""); 
     const[variablesArray, setVariablesArray] = useState(""); 
     const[binaryList, setBinaryList] = useState([]); 
@@ -15,9 +17,23 @@ function App() {
     const renderContent = () => {
         switch (activeTab) {
             case 'input':
-                return <Input setActiveTab={setActiveTab} setMintermsArray={setMintermsArray} setVariablesArray={setVariablesArray}/>;
+                return <Input 
+                    setActiveTab={setActiveTab} 
+                    mintermsInput={mintermsInput} 
+                    variablesInput={variablesInput} 
+                    setMintermsInput={setMintermsInput}
+                    setVariablesInput={setVariablesInput}
+                    setMintermsArray={setMintermsArray} 
+                    setVariablesArray={setVariablesArray}
+                
+                />;
             case 'pairwise':
-                return <Pairwise mintermsArray={mintermsArray} variablesArray={variablesArray} setBinaryList={setBinaryList} setMintermsList={setMintermsList}/>;
+                return <Pairwise 
+                    mintermsArray={mintermsArray} 
+                    variablesArray={variablesArray} 
+                    setBinaryList={setBinaryList} 
+                    setMintermsList={setMintermsList}
+                />;
             case 'primeImplicantTable':
                 return <Table mintermsList={mintermsList} binaryList={binaryList}/>;
             case 'finalExpressions':

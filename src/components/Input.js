@@ -1,17 +1,16 @@
 import { useState } from "react"
 import './Input.css';
 
-function InputSection({setActiveTab, setMintermsArray, setVariablesArray}) {
-    const[minterms, setMinterms] = useState(""); 
-    const[variables, setVariables] = useState(""); 
+function InputSection({setActiveTab,mintermsInput, variablesInput, setMintermsInput, setVariablesInput, setMintermsArray, setVariablesArray}) {
+    
 
     return (
         <div className="input-container">
             <h1>Input Minterms and Variables</h1>
             <div className="sub-container">
-                <InputComponent label="Minterms" value={minterms} retrieveInput={setMinterms} /> 
-                <InputComponent label="Variables" value={variables} retrieveInput={setVariables} />
-                <SolveButton minterms={minterms} variables = {variables} HandleInputs={() => HandleInputs(minterms, variables)} setMintermsArray={setMintermsArray} setVariablesArray={setVariablesArray} setActiveTab={setActiveTab}/>
+                <InputComponent label="Minterms" value={mintermsInput} retrieveInput={setMintermsInput} /> 
+                <InputComponent label="Variables" value={variablesInput} retrieveInput={setVariablesInput} />
+                <SolveButton minterms={mintermsInput} variables = {variablesInput} HandleInputs={() => HandleInputs(mintermsInput, variablesInput)} setMintermsArray={setMintermsArray} setVariablesArray={setVariablesArray} setActiveTab={setActiveTab}/>
             </div>
 
         </div>
@@ -25,10 +24,9 @@ function InputComponent({label, value, retrieveInput}) {
     }
 
     return(
-        <div>
+        <div className="input">
             <label>{label}</label>
             <input type="text" value={value} onChange={handleChange}></input>
-            <p>{value}</p>
         </div>
     )
 
@@ -36,12 +34,7 @@ function InputComponent({label, value, retrieveInput}) {
 
 function SolveButton({minterms, variables, HandleInputs, setMintermsArray, setVariablesArray, setActiveTab}) {
 
-    /* 
-    Have an array of text
-    If the array is not empty, add a try again at the end of the error statement and invalid input at the start of the error
-    Connect them
-    [mintermsFormatCorrect, noMintermDuplicates, noNonDigit, variablesFormatCorrect, noNonLetter, noVariableDuplicates, sufficientVariables]
-    */
+   
    const[errorText, setErrorText] = useState(''); 
 
    function setArrays() {
@@ -82,8 +75,8 @@ function SolveButton({minterms, variables, HandleInputs, setMintermsArray, setVa
     }
 
     return(
-        <div>
-            <p>{errorText}</p>
+        <div className="button-container">
+            <p className="errorText" >{errorText}</p>
             <button className="solve-button" onClick={onButtonClick}>Solve</button>
         </div>
         

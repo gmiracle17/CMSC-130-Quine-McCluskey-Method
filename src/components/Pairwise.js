@@ -8,7 +8,7 @@ function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList
     const complementMintermsArray = allMinterms.filter(m => !mintermsArray.includes(m));
 
     let allTables = []; 
-    let groupMap = createGroupMap(complementMintermsArray, variablesArray); 
+    let groupMap = createGroupMap(mintermsArray, variablesArray); 
     allTables.push(groupMap);
     let primeImplicantsList = []; 
 
@@ -50,7 +50,7 @@ function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList
     return (
         <div className='pairwise-container'>
             <p>Pairwise Simplification</p>
-            <p>This is done by comparing the minterms of n and n+1 and pairing them up if they differ by only 1 variable</p>
+            <p>This is done by comparing the minterms of group n and n+1 and pairing them up if they differ by only 1 variable</p>
             {
                 allTables.map((groupMap, index) => <SimplificationTable groupMap={groupMap} index={index} variablesArray = {variablesArray} getVariableEquivalent={getVariableEquivalent}/>)
             }

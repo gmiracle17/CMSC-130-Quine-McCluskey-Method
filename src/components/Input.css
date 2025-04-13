@@ -6,9 +6,25 @@
 .input-container {
     background-color: #424549;
     padding: 20px;
-    max-width:max-content;
+    max-width: max-content;
 }
 
-/* 
-To be pushed
-*/
+.sub-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+label {
+    display: flex;
+}
+
+.errorText {
+    color: rgb(231, 89, 89);
+}
