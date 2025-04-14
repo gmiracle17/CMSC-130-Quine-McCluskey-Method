@@ -2,13 +2,15 @@ import React from 'react';
 import { useEffect } from 'react';
 import './Pairwise.css';
 
-function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList}) {
+//TODO: Make the algorithm more efficient.
+
+function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray, setBinaryList, setMintermsList}) {
     
     const allMinterms = getAllPossibleMinterms(variablesArray); 
     const complementMintermsArray = allMinterms.filter(m => !mintermsArray.includes(m));
 
     let allTables = []; 
-    let groupMap = createGroupMap(mintermsArray, variablesArray); 
+    let groupMap = createGroupMap(complementMintermsArray, variablesArray); 
     allTables.push(groupMap);
     let primeImplicantsList = []; 
 
@@ -38,9 +40,9 @@ function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList
     }
     primeImplicantsList = removeDuplicates(primeImplicantsList); 
 
-    console.log(allTables);
-    console.log(getBinaryList(primeImplicantsList)); 
-    console.log(getMintermsList(primeImplicantsList));  
+    //console.log(allTables);
+    //console.log(getBinaryList(primeImplicantsList)); 
+    //console.log(getMintermsList(primeImplicantsList));  
     
     useEffect(() => {
         setBinaryList(getBinaryList(primeImplicantsList));
@@ -49,6 +51,8 @@ function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList
 
     return (
         <div className='pairwise-container'>
+            <GivenFunction mintermsInput={mintermsInput} variablesInput={variablesInput} />
+            <MintermsTable groupMap={allTables[0]}/>
             <p>Pairwise Simplification</p>
             <p>This is done by comparing the minterms of group n and n+1 and pairing them up if they differ by only 1 variable</p>
             {
@@ -66,7 +70,55 @@ class MintermObject {
       this.isMatched = false;
     }
 }
-  
+
+function GivenFunction({mintermsInput, variablesInput}) {
+
+    let variables = ''; 
+    for(let index = 0; index < variablesInput.length; index++) {
+        variables += variablesInput[index]; 
+        if (index !== variablesInput.length - 1) {
+            variables += ', '
+        }
+    }
+    
+    return(
+        <div className='given'>
+            <p>Given: F({variables}) = ∑({mintermsInput})</p>
+        </div>
+    ); 
+}
+
+function MintermsTable({groupMap}) {
+    return (
+        <div className='table-container'>
+            <p>Grouping of minterms based on number of ones</p>
+            <p>Minterms grouped are those that make the function zero as the simplified boolean function is in Product of Sums form</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Group Number</th>
+                        <th>Minterm</th>
+                        <th>Binary representation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {[...groupMap.entries()].map(([groupNumber, mintermsObjectArray]) => 
+                        mintermsObjectArray.map(obj => (
+                            <tr>
+                                <td>{groupNumber}</td>
+                                <td>{obj.minterms}</td>
+                                <td>{obj.binary}</td>
+                            </tr>
+                        ))
+                    
+                    )}
+                </tbody>
+            </table>
+
+
+        </div>
+    ); 
+}
 
 function SimplificationTable({groupMap, index, variablesArray, getVariableEquivalent}) {
     return(

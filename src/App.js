@@ -28,7 +28,9 @@ function App() {
                 
                 />;
             case 'pairwise':
-                return <Pairwise 
+                return <Pairwise
+                    mintermsInput={mintermsInput}
+                    variablesInput={variablesInput} 
                     mintermsArray={mintermsArray} 
                     variablesArray={variablesArray} 
                     setBinaryList={setBinaryList} 

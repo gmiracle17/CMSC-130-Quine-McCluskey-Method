@@ -1,15 +1,24 @@
-import { useState } from "react"
+import { Component, useState } from "react"
 import './Input.css';
 
 function InputSection({setActiveTab,mintermsInput, variablesInput, setMintermsInput, setVariablesInput, setMintermsArray, setVariablesArray}) {
     
-
     return (
         <div className="input-container">
             <h1>Input Minterms and Variables</h1>
             <div className="sub-container">
-                <InputComponent label="Minterms" value={mintermsInput} retrieveInput={setMintermsInput} /> 
-                <InputComponent label="Variables" value={variablesInput} retrieveInput={setVariablesInput} />
+                <InputComponent 
+                    label="Minterms" 
+                    value={mintermsInput} 
+                    retrieveInput={setMintermsInput} 
+                    placeholder="Example: 0,1,3,7,8,9,11,15"
+                /> 
+                <InputComponent 
+                    label="Variables" 
+                    value={variablesInput} 
+                    retrieveInput={setVariablesInput} 
+                    placeholder="Example: ABCD"
+                />
                 <SolveButton minterms={mintermsInput} variables = {variablesInput} HandleInputs={() => HandleInputs(mintermsInput, variablesInput)} setMintermsArray={setMintermsArray} setVariablesArray={setVariablesArray} setActiveTab={setActiveTab}/>
             </div>
 
@@ -18,15 +27,24 @@ function InputSection({setActiveTab,mintermsInput, variablesInput, setMintermsIn
     ); 
 }
 
-function InputComponent({label, value, retrieveInput}) {
+/**
+ * Input component that contains the label and input html element
+ * @param {string} label - Description about the input
+ * @param {string} value - The input itself
+ * @param {function} retrieveInput - updates the values of either the mintermsInput or the variablesInput
+ * 
+ * @returns {Component} 
+ */
+function InputComponent({label, value, retrieveInput, placeholder}) { 
+    // updates the state value depending on the what the user inputs
     function handleChange(event) {
         retrieveInput(event.target.value); 
     }
 
     return(
-        <div className="input">
+        <div className="input-component">
             <label>{label}</label>
-            <input type="text" value={value} onChange={handleChange}></input>
+            <input type="text" value={value} onChange={handleChange} placeholder={placeholder}></input>
         </div>
     )
 
@@ -34,7 +52,6 @@ function InputComponent({label, value, retrieveInput}) {
 
 function SolveButton({minterms, variables, HandleInputs, setMintermsArray, setVariablesArray, setActiveTab}) {
 
-   
    const[errorText, setErrorText] = useState(''); 
 
    function setArrays() {
@@ -83,6 +100,7 @@ function SolveButton({minterms, variables, HandleInputs, setMintermsArray, setVa
     ); 
 }
 
+
 function HandleInputs(minterms, variables) {
     /* 
     minterms
@@ -96,18 +114,29 @@ function HandleInputs(minterms, variables) {
     let mintermsFormatMessage = '';
     let mintermDuplicatesMesage = ''; 
     let nonDigitMessage = '';
-    let maxNumber; 
+    let maxMintermInput; 
 
-    minterms = minterms.trim(); 
-    let mintermsArray = minterms.split(','); 
+    minterms = String(minterms.trim()); 
+    let mintermsArray = minterms.split(","); 
 
-    for (let index = 0; index < mintermsArray.length; index++) {
-        let element = parseFloat(mintermsArray[index])
-        if(!Number.isInteger(element) || element < 0) {
-            nonDigitMessage = 'Incorrect minterms input format. Minterms inputted should only be positive integers separated with commas with no space'; 
-        } 
-        else {
-            mintermsArray[index] = parseFloat(mintermsArray[index]); 
+    if (minterms.length === 0) {
+        mintermsFormatMessage = 'Minterms input required'
+    } else {
+        for (let index = 0; index < mintermsArray.length; index++) {
+            let trimmed = mintermsArray[index].trim();
+
+            if (!/^\d+$/.test(trimmed)) {
+                nonDigitMessage = 'Incorrect minterms input format. Minterms input should only be positive integers separated with commas';
+                break; 
+            }
+
+            let element = parseFloat(trimmed); 
+            if(!Number.isInteger(element) || element < 0) {
+                nonDigitMessage = 'Incorrect minterms input format. Minterms input should only be positive integers separated with commas'; 
+            } 
+            else {
+                mintermsArray[index] = parseFloat(mintermsArray[index]); 
+            }
         }
     }
 
@@ -118,9 +147,11 @@ function HandleInputs(minterms, variables) {
     }
 
     if (mintermsDuplicates.length === 0) {
-        mintermsArray.sort(); 
-        maxNumber = mintermsArray.at(-1); 
+        mintermsArray.sort((a, b) => a - b); 
+        maxMintermInput = mintermsArray.at(-1); 
     }
+
+    console.log(mintermsArray); 
 
     /* 
     variables 
@@ -137,19 +168,22 @@ function HandleInputs(minterms, variables) {
     let variableDuplicatesMessage = ''; 
     let sufficientVariablesMessage = '';
 
-    for (let index = 0; index < variables.length; index++) {
-        let char = variables.charAt(index); 
-
-        if (char === " ") {
-            variablesFormatMessage = 'Incorrect variables format. Ensure there are no spaces';
-        } else {
-            variablesArray.push(char);
-            if (!/[a-zA-Z]/.test(char)) {
-                nonLetterMessage = 'Variables should only be letters of the English Alphabet';
+    if (variables.length === 0) {
+        variablesFormatMessage = 'Variables input required'
+    } else {
+        for (let index = 0; index < variables.length; index++) {
+            let char = variables.charAt(index); 
+    
+            if (char === " ") {
+                variablesFormatMessage = 'Incorrect variables format. Ensure there are no spaces';
+            } else {
+                variablesArray.push(char);
+                if (!/[a-zA-Z]/.test(char)) {
+                    nonLetterMessage = 'Variables should only be letters of the English Alphabet';
+                }
             }
         }
     }
-
 
     const variablesDuplicates = variablesArray.filter((item, index) => variablesArray.indexOf(item) !== index)
 
@@ -157,13 +191,25 @@ function HandleInputs(minterms, variables) {
         variableDuplicatesMessage = 'Variables should have no duplicates'; 
     }
 
+
     if (variablesDuplicates.length === 0) {
-        if (Math.pow(2, variablesArray.length) - 1 < maxNumber) {
-            let quantityVariables = variablesArray.length; 
-            while(Math.pow(2, quantityVariables) - 1 < maxNumber) {
-                quantityVariables++; 
+        if(variablesArray.length > 10) {
+            sufficientVariablesMessage = 'Maximum number of variables for the input is only 10.'
+        } else if (maxMintermInput > 1023) {
+            sufficientVariablesMessage = 'Minterm value greater than 1023 is invalid as the maximum number of variables for the input is only 10'
+        } else {
+            let maxMintermValue = Math.pow(2, variablesArray.length) - 1; 
+            if (maxMintermValue < maxMintermInput) {
+                let quantityVariables = variablesArray.length; 
+                while(Math.pow(2, quantityVariables) - 1 < maxMintermInput) {
+                    quantityVariables++; 
+                }
+                if(quantityVariables == 10) {
+                    sufficientVariablesMessage = 'Number of variables should be equal to ' + quantityVariables + ' or change the minterm input such that the maximum minterm value is ' + maxMintermValue; 
+                } else {
+                    sufficientVariablesMessage = 'Number of variables should be at least ' + quantityVariables + ' or change the minterm input such that the maximum minterm value is ' + maxMintermValue; 
+                }
             }
-            sufficientVariablesMessage = 'Number of variables should be at least ' + quantityVariables; 
         }
     }
 
