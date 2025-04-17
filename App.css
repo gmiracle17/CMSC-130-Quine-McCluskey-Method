@@ -3,6 +3,7 @@
   text-align: center;
   font-family: "Comic Sans Regular";
   min-height: 100vh;
+  overflow-x:scroll;
 }
 
 .App-header {
@@ -60,35 +61,36 @@ a {
   background-color: #424549;
   padding: 20px;
   border-radius: 10px;
-  margin: auto;
-  overflow-x: scroll;
+  margin: auto;  /* Allow horizontal scrolling */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: auto;
+  justify-content: center; /* Default center alignment */
+  width:max-content;
 }
 
 .tableHeader {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   margin-bottom: 10px;
 }
 
 .tableRow {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .primeImplicantEntries, .maxtermEntries, .maxtermColumn, .xEntries {
-  text-align: center;
-  justify-content: center;
+  display: flex;               
+  justify-content: center;      
+  align-items: center;          
+  text-align: center;           
   border-radius: 7px;
   background-color: #36393e;
   margin: 1px;
   line-height: 4vmin;
   padding-inline: 20px;
-  justify-content: flex-start !important;
-  align-items: center !important;
+  white-space: nowrap;          
 }
 
 .primeImplicantEntries {
@@ -96,7 +98,8 @@ a {
 } 
 
 .maxtermEntries {
-  min-width: 20vmax;
+  width: max-content;
+  flex: 1;
 }
 
 .maxtermColumn, .xEntries {
@@ -112,13 +115,6 @@ a {
   background-color: #282b30;
 }
 
-.essentialPrimeImplicants {
+.primeImplicantsDisplay{
   font-size: calc(5px + 2vmin);
-}
-
-.space {
-  min-width: 20px;
-  flex-shrink: 0;
-  background: transparent;
-  pointer-events: none;
 }
