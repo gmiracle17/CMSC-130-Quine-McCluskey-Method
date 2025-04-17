@@ -1,9 +1,9 @@
-//may binago nga ba ako dito i forgot
+// binago ko lang is setActiveTab para if wala pang input, disabled other tabs
 
 import { Component, useState } from "react"
 import './Input.css';
 
-function InputSection({setActiveTab,mintermsInput, variablesInput, setMintermsInput, setVariablesInput, setMintermsArray, setVariablesArray}) {
+function InputSection({setActiveTab, mintermsInput, variablesInput, setMintermsInput, setVariablesInput, setMintermsArray, setVariablesArray}) {
     
     return (
         <div className="input-container">
