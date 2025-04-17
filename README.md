@@ -1,9 +1,4 @@
 # CMSC-130-Quine-McCluskey Web App
 
-install this to use react-router-dom:
-npm install react-router-dom ( d na pala need )
-
-Notes for future:
-ask sir if pwedeng encircle or color the numbers na oks na instead of check...
-find font na nasa canva...
-un minterms dapat maxterms tbh but idk gonna sleep
+sa fonts folder: delete other fonts, keep only Ldfcomicsans-jj7l.ttf 
+PrimeImplicantTable.js : chose to not center that btch to handle multiple outputs and columns and stuff,,, it's working properly tho
