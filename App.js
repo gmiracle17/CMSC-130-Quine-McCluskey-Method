@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import Input from './components/Input.js';
 import Pairwise from './components/Pairwise.js';
-import Table from './components/Table.js';
+import PrimeImplicantTable from './components/PrimeImplicantTable.js';
 import POS from './components/POS.js';
 
 function App() {
@@ -13,6 +13,8 @@ function App() {
     const [variablesArray, setVariablesArray] = useState([]); 
     const [binaryList, setBinaryList] = useState([]); 
     const [mintermsList, setMintermsList] = useState([]);
+    const [essentialPrimeImplicants, setEssentialPrimeImplicants] = useState([]);
+    const [neededNonessentialPrimeImplicants, setNeededNonessentialPrimeImplicants] = useState([]);
 
     const inputsAreValid = mintermsInput.trim() !== "" && variablesInput.trim() !== "";
 
@@ -41,16 +43,21 @@ function App() {
                 ) : null; // Render nothing if inputs are not valid
             case 'primeImplicantTable':
                 return inputsAreValid ? (
-                    <Table     
+                    <PrimeImplicantTable     
                         minterms={mintermsArray} 
                         variables={variablesArray}
                         maxtermsList={mintermsList}
                         binaryList={binaryList}
+                        setEssentialPrimeImplicants={setEssentialPrimeImplicants}
+                        setNeededNonessentialPrimeImplicants={setNeededNonessentialPrimeImplicants}
                     />
                 ) : null; // Render nothing if inputs are not valid
             case 'finalExpressions':
                 return inputsAreValid ? (
-                    <POS />
+                    <POS 
+                        essentialPrimeImplicants={essentialPrimeImplicants}
+                        neededNonessentialPrimeImplicants={neededNonessentialPrimeImplicants}
+                    />
                 ) : null; // Render nothing if inputs are not valid
             default:
                 return <Input />;
