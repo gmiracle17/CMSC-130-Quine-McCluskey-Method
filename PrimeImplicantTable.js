@@ -100,7 +100,6 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
                         </div>
                     );
                 })}
-                <div className="space" />
             </div>
         );
     });
@@ -171,7 +170,6 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
                     </div>
                 );
             })}
-            <div className="space" />
         </div>
     );
 
@@ -186,7 +184,7 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
                 {tableRows}
                 {checkRow}
             </div>
-            <div className="essentialPrimeImplicants">
+            <div className="primeImplicantsDisplay">
                 <p><b>Essential Prime Implicants:</b><br />
                     {essentialPrimeImplicants.length === 0 ? (<span>None</span>) : (Array.from(essentialPrimeImplicants).join(', '))}</p>
                 <p><b>Needed Non-Essential Prime Implicants:</b><br />
