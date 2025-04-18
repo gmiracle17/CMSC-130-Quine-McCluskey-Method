@@ -3,7 +3,6 @@
   text-align: center;
   font-family: "Comic Sans Regular";
   min-height: 100vh;
-  overflow-x:scroll;
 }
 
 .App-header {
@@ -56,15 +55,23 @@ a {
 
 /* Prime Implicant Table Styling */
 .tableContainer {
-  display: flex;
-  flex-direction: column;
   background-color: #424549;
   padding: 20px;
   border-radius: 10px;
-  margin: auto;  /* Allow horizontal scrolling */
+  margin: auto; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  justify-content: center; /* Default center alignment */
+  justify-content: center;
+  align-items: center;
+  overflow-x: scroll;
+  width: 90%;
+}
+
+.table{
+  display: flex;
+  flex-direction: column;
   width:max-content;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 .tableHeader {
