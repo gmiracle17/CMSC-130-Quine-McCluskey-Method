@@ -1,5 +1,8 @@
-import React from 'react';
-import '../App.css';
+/**
+ * Errors for now: can't handle when there is only 1 element in maxterms and primeImplicantsList, and when maxterms has no -
+ */
+import React, { useEffect } from 'react';
+import './PrimeImplicantTable.css';
 
 /**
  * Table Component that visualizes prime implicants and maxterms
@@ -12,7 +15,7 @@ import '../App.css';
  * 
  */
 
-function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) {
+function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, setEssentialPrimeImplicants, setNeededNonessentialPrimeImplicants }) {
     /**
      * Generate primeImplicantsList - list of prime implicants from the binary representation
      */
@@ -41,9 +44,9 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
      * Generate xMap - maps prime implicants to the maxterms they cover
      */
     const xMap = maxtermsList.map(maxtermGroup => {
-        const coveredTerms = maxtermGroup.split('-').map(Number);
-        return maxterms.map(maxterm => coveredTerms.includes(maxterm));
-    });
+        const coveredSet = new Set(maxtermGroup.split('-').map(Number));
+        return maxterms.map(maxterm => coveredSet.has(maxterm));
+    });    
 
     /**
      * Generate xCounts - maps count of prime implicants that cover each maxterm
@@ -148,10 +151,10 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
     }
 
      /**
-     * Final row that shows checkmarks for essential ☑️/ needed non-essential ✅ prime implicant coverage
+     * Row that shows checkmarks for essential ☑️/ needed non-essential ✅ prime implicant coverage
      */
     const checkRow = (
-        <div className="tableRow">
+        <div className="checkRow">
             <div className="primeImplicantEntries"></div>
             <div className="maxtermEntries"></div>
             {maxterms.map((maxterm, columnIndex) => {
@@ -159,32 +162,61 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
                 const isCoveredByNonEssential = maxtermsCoveredByNeededNonessentialPIs.has(maxterm);
 
                 return (
-                    <div key={columnIndex} className={`xEntries ${isCoveredByEssential ? 'essentialCheck' : 'nonEssentialCheck'}`}>
-                        {isCoveredByEssential ? '☑️' : (isCoveredByNonEssential ? '✅' : '')}
+                    <div key={columnIndex} className={`checkEntries ${isCoveredByEssential ? 'essentialCheck' : 'nonEssentialCheck'}`}>
+                        {isCoveredByEssential ? '✔️' : (isCoveredByNonEssential ? '➖' : '❌')}
                     </div>
                 );
             })}
         </div>
     );
 
+    /**
+     * Call to push data to App.js
+     */
+    const essentialArray = Array.from(essentialPrimeImplicants);
+    const neededNonessentialArray = Array.from(neededNonessentialPrimeImplicants);
+
+    useEffect(() => {
+        setEssentialPrimeImplicants(essentialArray);
+        setNeededNonessentialPrimeImplicants(neededNonessentialArray);
+    }, [essentialArray, neededNonessentialArray, setEssentialPrimeImplicants, setNeededNonessentialPrimeImplicants]);    
+
     return (
         <div>
+            {(essentialPrimeImplicants.size > 0 || neededNonessentialPrimeImplicants.size > 0) && (
             <div className="tableContainer">
                 <div className="table">
+                    {checkRow}
                     <div className="tableHeader">
                         <div class="primeImplicantEntries">Prime Implicants</div>
                         <div class="maxtermEntries">Maxterms</div>
                         {maxtermColumns}
                     </div>
                     {tableRows}
-                    {checkRow}
                 </div>
-            </div>
+            </div>)}
             <div className="primeImplicantsDisplay">
                 <p><b>Essential Prime Implicants:</b><br />
-                    {essentialPrimeImplicants.length === 0 ? (<span>None</span>) : (Array.from(essentialPrimeImplicants).join(', '))}</p>
+                    {essentialPrimeImplicants.size === 0 ? (<span>None</span>) : (Array.from(essentialPrimeImplicants).join(', '))}</p>
                 <p><b>Needed Non-Essential Prime Implicants:</b><br />
-                    {neededNonessentialPrimeImplicants.size === 0 ? (<span>None</span>) : (Array.from(neededNonessentialPrimeImplicants).join(', '))}</p>
+                    {neededNonessentialPrimeImplicants.size === 0 ? (<span>None</span>) : (Array.from(neededNonessentialPrimeImplicants).join(', '))}</p><br/>
+                    <small>Note: Needed Non-Essential Prime Implicants are chosen by taking the nonessential prime implicant <br/>
+                        that covers the most number of maxterms until all maxterms are covered</small> 
+            </div>
+            <div className="legendContainer">
+                <h3>LEGEND FOR TABLE <br/></h3>
+                <div className="legends">
+                    <div>
+                        ✔️ - maxterm covered by essential prime implicant <br/>
+                        ➖ - maxterm covered by nonessential prime implicant <br/>
+                        ❌ - maxterm covered by neither of the two <br/>
+                    </div>
+                    <div>
+                        <span className="essentialDot">⬤</span> - X entry alone in column
+                        <br />
+                        <span className="essentialFriendDot">⬤</span> - X entry in the same row as purple X
+                    </div>
+                </div>
             </div>
         </div>
     );
