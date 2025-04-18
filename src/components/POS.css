@@ -1,0 +1,23 @@
+.container {
+    background-color: #424549;
+    padding: 20px;
+    border-radius: 10px;
+    margin: auto; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    width: 75%;
+    height: auto;
+    margin-bottom: 30px;
+}
+
+.answer {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: calc(5px + 7vmin);
+}
+
+small {
+    font-family: Arial;
+    font-size: calc(5px + 2vmin);
+}

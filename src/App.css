@@ -1,0 +1,53 @@
+.App {
+  text-align: center;
+  font-family: Arial;
+  min-height: 100vh;
+}
+
+.App-header {
+  min-height: 21vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(8px + 5vmin);
+  color: white;
+}
+
+.App-content {
+  padding: 5vmin;
+}
+
+.App-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(3px + 2vmin);
+}
+
+.tab {
+  background-color: #36393e;
+  padding: 20px;
+  color: white;
+  width: 16vmax;
+}
+
+.tab:hover {
+  background-color: #424549;
+  cursor: pointer;
+}
+
+.tab.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none; 
+}
+
+.tab.active {
+  background-color: #424549;
+}
+
+a {
+  text-decoration: none;
+}

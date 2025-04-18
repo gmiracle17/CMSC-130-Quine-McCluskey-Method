@@ -1,0 +1,20 @@
+.given {
+    font-size: 3.2vmin;
+}
+
+
+.table-container {
+margin-top: 40px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 2px solid white;
+    text-align: left;
+    padding: 10px;
+    background-color: #36393e;
+}

@@ -1,0 +1,65 @@
+.input-container {
+    background-color: #424549;
+    border-radius: 20px;
+    padding: 20px;
+    width: 45vw;
+}
+
+.sub-container {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.input-component {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    margin: 10px 0px;
+    padding-left: 10%;
+}
+
+input {
+    margin-top: 5px;
+    width: 80%; 
+    font-size: 2.5vmin;
+    padding: 1.5vmin;
+    border: none;
+    border-radius: 10px;
+    background-color: #1e2124;
+    color: white;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.solve-button {
+    border-radius: 15px;
+    color: white;
+    background-color: #1e2124;
+    border: none;
+    font-size: 2.5vmin;
+    padding: 1.5vmin;
+    width: 20%;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.solve-button:hover {
+    background-color: #7289da;
+}
+
+label {
+    font-size: 2.7vmin;
+    display: flex;
+}
+
+.errorText {
+    max-width: fit-content;
+    color: rgb(231, 89, 89);
+}
