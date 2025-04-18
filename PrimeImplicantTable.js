@@ -28,8 +28,7 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
      * and excluding terms that are in minterms
      */
     const totalTerms = 2 ** variables.length; // maxterms + minterms
-    const maxterms = Array.from({ length: totalTerms }, (_, index) => index).filter(index => !minterms.includes(index));
-
+    const maxterms = Array.from({ length: totalTerms }, (term, index) => index).filter(index => !minterms.includes(index));
 
     /**
      * Maxterm Column headers for the table based on maxterms
@@ -49,8 +48,8 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
     /**
      * Generate xCounts - maps count of prime implicants that cover each maxterm
      */
-    const xCounts = maxterms.map((_, maxtermColumns) =>
-        xMap.reduce((count, row) => count + (row[maxtermColumns] ? 1 : 0), 0)
+    const xCounts = maxterms.map((maxterm, maxtermIndex) =>
+        xMap.reduce((count, primeImplicantRow) => count + (primeImplicantRow[maxtermIndex] ? 1 : 0), 0)
     );
 
     /**
@@ -142,11 +141,6 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
 
     while (uncoveredMaxterms.length > 0) {
         const { neededPrimeImplicant, mostCoveredMaxterms } = findNeededPrimeImplicant(uncoveredMaxterms);
-
-        if (!neededPrimeImplicant) {
-            console.warn('Unable to cover all maxterms!');
-            break;
-        }
 
         neededNonessentialPrimeImplicants.add(neededPrimeImplicant);
         mostCoveredMaxterms.forEach(maxterm => maxtermsCoveredByNeededNonessentialPIs.add(maxterm));
