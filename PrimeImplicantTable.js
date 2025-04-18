@@ -41,8 +41,8 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
     /**
      * Generate xMap - maps prime implicants to the maxterms they cover
      */
-    const xMap = maxtermsList.map(maxtermPair => {
-        const coveredTerms = maxtermPair.split('-').map(Number);
+    const xMap = maxtermsList.map(maxtermGroup => {
+        const coveredTerms = maxtermGroup.split('-').map(Number);
         return maxterms.map(maxterm => coveredTerms.includes(maxterm));
     });
 
@@ -176,13 +176,15 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList }) 
     return (
         <div>
             <div className="tableContainer">
-                <div className="tableHeader">
-                    <div class="primeImplicantEntries" id="header">Prime Implicants</div>
-                    <div class="maxtermEntries" id="header">Maxterms</div>
-                    {maxtermColumns}
+                <div className="table">
+                    <div className="tableHeader">
+                        <div class="primeImplicantEntries">Prime Implicants</div>
+                        <div class="maxtermEntries">Maxterms</div>
+                        {maxtermColumns}
+                    </div>
+                    {tableRows}
+                    {checkRow}
                 </div>
-                {tableRows}
-                {checkRow}
             </div>
             <div className="primeImplicantsDisplay">
                 <p><b>Essential Prime Implicants:</b><br />
