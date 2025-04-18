@@ -1,7 +1,6 @@
-/* General Styling */
 .App {
   text-align: center;
-  font-family: "Comic Sans Regular";
+  font-family: Arial;
   min-height: 100vh;
 }
 
@@ -51,77 +50,4 @@
 
 a {
   text-decoration: none;
-}
-
-/* Prime Implicant Table Styling */
-.tableContainer {
-  background-color: #424549;
-  padding: 20px;
-  border-radius: 10px;
-  margin: auto; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  justify-content: center;
-  align-items: center;
-  overflow-x: scroll;
-  width: 90%;
-}
-
-.table{
-  display: flex;
-  flex-direction: column;
-  width:max-content;
-  justify-content: center;
-  margin: 0 auto;
-}
-
-.tableHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.tableRow {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.primeImplicantEntries, .maxtermEntries, .maxtermColumn, .xEntries {
-  display: flex;               
-  justify-content: center;      
-  align-items: center;          
-  text-align: center;           
-  border-radius: 7px;
-  background-color: #36393e;
-  margin: 1px;
-  line-height: 4vmin;
-  padding-inline: 20px;
-  white-space: nowrap;          
-}
-
-.primeImplicantEntries {
-  min-width: 8vmax;
-} 
-
-.maxtermEntries {
-  width: max-content;
-  flex: 1;
-}
-
-.maxtermColumn, .xEntries {
-  min-width: 2vmax;
-  width: auto;
-}
-
-.essential {
-  background-color: #7289da;
-}
-
-.essentialFriend {
-  background-color: #282b30;
-}
-
-.primeImplicantsDisplay{
-  font-size: calc(5px + 2vmin);
 }
