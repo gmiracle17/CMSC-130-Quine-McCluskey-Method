@@ -1,7 +1,7 @@
-/* General Styling */
 .App {
   text-align: center;
-  font-family: "Comic Sans Regular";
+  font-family: Arial;
+  min-height: 100vh;
 }
 
 .App-header {
@@ -19,6 +19,7 @@
   display: flex; 
   align-items: center;
   justify-content: center;
+
 }
 
 .App-tabs {
@@ -54,51 +55,3 @@
 a {
   text-decoration: none;
 }
-
-/* Prime Implicant Table Styling */
-.tableContainer {
-  display: flex;
-  flex-direction: column;
-  background-color: #424549;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.tableHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: 15px;
-  margin-bottom: 10px;
-}
-
-.tableRow {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.primeImplicantEntries, .mintermEntries, .xEntries {
-  text-align: center;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background-color: #292b30;
-  margin: 1px;
-}
-
-.tableColumn, .mintermColumn {
-  margin-inline: 1px;
-  border-radius: 10px;
-}
-
-.tableColumn, .primeImplicantEntries, .mintermEntries {
-  width: 12vmax;
-}
-
-.mintermColumn, .xEntries {
-  width: 5vmax;
-}
-
-/* 
-To be pushed
-*/

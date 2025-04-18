@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import './App.css';
 import Input from './components/Input.js';
 import Pairwise from './components/Pairwise.js';
-import Table from './components/Table.js';
+import PrimeImplicantTable from './components/PrimeImplicantTable.js';
 import POS from './components/POS.js';
 
 function App() {
-    const[mintermsInput, setMintermsInput] = useState(""); 
-    const[variablesInput, setVariablesInput] = useState(""); 
-    const[activeTab, setActiveTab] = useState('input');
-    const[mintermsArray, setMintermsArray] = useState(""); 
-    const[variablesArray, setVariablesArray] = useState(""); 
-    const[binaryList, setBinaryList] = useState([]); 
-    const[mintermsList, setMintermsList] = useState([]); 
+    const [mintermsInput, setMintermsInput] = useState(""); 
+    const [variablesInput, setVariablesInput] = useState(""); 
+    const [activeTab, setActiveTab] = useState('input');
+    const [mintermsArray, setMintermsArray] = useState([]); 
+    const [variablesArray, setVariablesArray] = useState([]); 
+    const [binaryList, setBinaryList] = useState([]); 
+    const [mintermsList, setMintermsList] = useState([]);
+    const [essentialPrimeImplicants, setEssentialPrimeImplicants] = useState([]);
+    const [neededNonessentialPrimeImplicants, setNeededNonessentialPrimeImplicants] = useState([]);
+
+    const inputsAreValid = mintermsInput.trim() !== "" && variablesInput.trim() !== "";
 
     const renderContent = () => {
         switch (activeTab) {
@@ -25,21 +29,38 @@ function App() {
                     setVariablesInput={setVariablesInput}
                     setMintermsArray={setMintermsArray} 
                     setVariablesArray={setVariablesArray}
-                
                 />;
             case 'pairwise':
-                return <Pairwise
-                    mintermsInput={mintermsInput}
-                    variablesInput={variablesInput} 
-                    mintermsArray={mintermsArray} 
-                    variablesArray={variablesArray} 
-                    setBinaryList={setBinaryList} 
-                    setMintermsList={setMintermsList}
-                />;
+                return inputsAreValid ? (
+                    <Pairwise
+                        mintermsInput={mintermsInput}
+                        variablesInput={variablesInput} 
+                        mintermsArray={mintermsArray} 
+                        variablesArray={variablesArray} 
+                        setBinaryList={setBinaryList} 
+                        setMintermsList={setMintermsList}
+                    />
+                ) : null; // Render nothing if inputs are not valid
             case 'primeImplicantTable':
-                return <Table mintermsList={mintermsList} binaryList={binaryList}/>;
+                return inputsAreValid ? (
+                    <PrimeImplicantTable     
+                        minterms={mintermsArray} 
+                        variables={variablesArray}
+                        maxtermsList={mintermsList}
+                        binaryList={binaryList}
+                        setEssentialPrimeImplicants={setEssentialPrimeImplicants}
+                        setNeededNonessentialPrimeImplicants={setNeededNonessentialPrimeImplicants}
+                    />
+                ) : null; // Render nothing if inputs are not valid
             case 'finalExpressions':
-                return <POS />;
+                return inputsAreValid ? (
+                    <POS 
+                        minterms={mintermsArray} 
+                        variables={variablesArray}
+                        essentialPrimeImplicants={essentialPrimeImplicants}
+                        neededNonessentialPrimeImplicants={neededNonessentialPrimeImplicants}
+                    />
+                ) : null; // Render nothing if inputs are not valid
             default:
                 return <Input />;
         }
@@ -58,22 +79,22 @@ function App() {
                     Input Minterms and Variables
                 </div>
                 <div 
-                    className={`tab ${activeTab === 'pairwise' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('pairwise')}
+                    className={`tab ${activeTab === 'pairwise' ? 'active' : ''} ${!inputsAreValid ? 'disabled' : ''}`} 
+                    onClick={() => inputsAreValid && setActiveTab('pairwise')}
                 >
                     Pairwise Simplification
                 </div>
                 <div 
-                    className={`tab ${activeTab === 'primeImplicantTable' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('primeImplicantTable')}
+                    className={`tab ${activeTab === 'primeImplicantTable' ? 'active' : ''} ${!inputsAreValid ? 'disabled' : ''}`} 
+                    onClick={() => inputsAreValid && setActiveTab('primeImplicantTable')}
                 >
                     Prime Implicant Table
                 </div>
                 <div 
-                    className={`tab ${activeTab === 'finalExpressions' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('finalExpressions')}
+                    className={`tab ${activeTab === 'finalExpressions' ? 'active' : ''} ${!inputsAreValid ? 'disabled' : ''}`} 
+                    onClick={() => inputsAreValid && setActiveTab('finalExpressions')}
                 >
-                    Final Minimized Expressions
+                    Final Minimized Expression
                 </div>
             </div>
             <div className="App-content">
