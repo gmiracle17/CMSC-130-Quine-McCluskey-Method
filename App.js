@@ -55,6 +55,8 @@ function App() {
             case 'finalExpressions':
                 return inputsAreValid ? (
                     <POS 
+                        minterms={mintermsArray} 
+                        variables={variablesArray}
                         essentialPrimeImplicants={essentialPrimeImplicants}
                         neededNonessentialPrimeImplicants={neededNonessentialPrimeImplicants}
                     />
@@ -92,7 +94,7 @@ function App() {
                     className={`tab ${activeTab === 'finalExpressions' ? 'active' : ''} ${!inputsAreValid ? 'disabled' : ''}`} 
                     onClick={() => inputsAreValid && setActiveTab('finalExpressions')}
                 >
-                    Final Minimized Expressions
+                    Final Minimized Expression
                 </div>
             </div>
             <div className="App-content">
