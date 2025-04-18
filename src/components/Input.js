@@ -193,7 +193,7 @@ function HandleInputs(minterms, variables) {
 
 
     if (variablesDuplicates.length === 0) {
-        if(variablesArray.length > 10) {
+        if(variablesArray.length > 6) {
             sufficientVariablesMessage = 'Maximum number of variables for the input is only 10.'
         } else if (maxMintermInput > 1023) {
             sufficientVariablesMessage = 'Minterm value greater than 1023 is invalid as the maximum number of variables for the input is only 10'
@@ -204,7 +204,7 @@ function HandleInputs(minterms, variables) {
                 while(Math.pow(2, quantityVariables) - 1 < maxMintermInput) {
                     quantityVariables++; 
                 }
-                if(quantityVariables == 10) {
+                if(quantityVariables == 6) {
                     sufficientVariablesMessage = 'Number of variables should be equal to ' + quantityVariables + ' or change the minterm input such that the maximum minterm value is ' + maxMintermValue; 
                 } else {
                     sufficientVariablesMessage = 'Number of variables should be at least ' + quantityVariables + ' or change the minterm input such that the maximum minterm value is ' + maxMintermValue; 

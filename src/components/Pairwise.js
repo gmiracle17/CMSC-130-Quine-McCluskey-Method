@@ -4,46 +4,80 @@ import './Pairwise.css';
 
 //TODO: Make the algorithm more efficient.
 
+/**
+ * Main function responsible for Pairwise Simplification
+ * @param mintermsArray - array containing minterms inputted by the user sorted from least to greatest (eg. [0,1,2,3])
+ * @param variablesArray - array containing variables inputed by the user (eg. [A,B,C,D])
+ * @param {function} setBinaryList - function passed as prop to set Binary List of Prime Implicants 
+ * @param {function} setMintermsList - function passed as prop to set Minterms List of Prime Implicants
+ * @returns Grouped Minterms Table and Pairwise Simplfication Table Rounds
+ */
 function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray, setBinaryList, setMintermsList}) {
     
+    // Get all posible minterms based on the number of variables
     const allMinterms = getAllPossibleMinterms(variablesArray); 
+    
+    // Get all minterms not included in the minterms inputted by the user
     const complementMintermsArray = allMinterms.filter(m => !mintermsArray.includes(m));
 
-    let allTables = []; 
+    let allTables = []; // holds all the tables which are each represented by a map
+    
+    // create a map wherein key = group number (number of ones), value = array of minterm objects
     let groupMap = createGroupMap(complementMintermsArray, variablesArray); 
     allTables.push(groupMap);
-    let primeImplicantsList = []; 
+    let primeImplicantsList = []; // holds all prime implicants
+    
+    let round = 1;
 
+    // Run this loop until no more matched pairs are found
     while (true) {
         let matchedPairsMap = new Map(); 
-        
+
+        // For each group map, compare the binary representation of the minterms of group n and group n + 1
         for (const key of groupMap.keys()) {
+            
+            // If group n + 1 does not exist, no comparison can be made and must move to next group for comparison.
             if (!groupMap.has(key + 1)) {
                 continue; 
             }
             
             let mintermsObjectsArray1 = groupMap.get(key); 
             let mintermsObjectsArray2 = groupMap.get(key + 1); 
-            matchPairs(mintermsObjectsArray1, mintermsObjectsArray2, matchedPairsMap); 
+            matchPairs(mintermsObjectsArray1, mintermsObjectsArray2, matchedPairsMap); // main function for checking for matched pairs
         }
 
+        // After a round of pairwise simplification, get all unmatched pairs if there is any and store it into prime implicant list
         getAllUnmatchedPairs(groupMap, primeImplicantsList);
 
-
-        if(matchedPairsMap.size === 0) {
+        // condition needed to break the loop
+        if(matchedPairsMap.size === 0) { 
             break; 
         }
+
+        // For round 4 and up, duplicate minterms will not be shown for better visualization
+        if (round > 3) {
+            for(const key of matchedPairsMap.keys()) {
+                let group = matchedPairsMap.get(key);
+                let cleanedGroup = removeDuplicates(group);
+                matchedPairsMap.set(key, cleanedGroup);
+            }
+        }
+
+        round++;
 
         allTables.push(matchedPairsMap); 
         groupMap = matchedPairsMap; 
         
     }
+
+    // Remove any duplicate prime implicants
     primeImplicantsList = removeDuplicates(primeImplicantsList); 
 
     //console.log(allTables);
     //console.log(getBinaryList(primeImplicantsList)); 
     //console.log(getMintermsList(primeImplicantsList));  
     
+    // Set the binary list and minterms list that will be used for PrimeImplicant.js
     useEffect(() => {
         setBinaryList(getBinaryList(primeImplicantsList));
         setMintermsList(getMintermsList(primeImplicantsList));
@@ -62,15 +96,22 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
     );
 }
 
+// Minterm object for each table containing necessary information
 class MintermObject {
     constructor(minterms, binary, groupNum) {
-      this.minterms = minterms; // string of merged minterms using -
-      this.binary = binary;     // string with "_" for dashes
-      this.groupNum = groupNum;
+      this.minterms = minterms; // either a single minterm or a string of merged minterms using -
+      this.binary = binary;     // binary representation using string with "_"
+      this.groupNum = groupNum; // number of ones in the binary representation
       this.isMatched = false;
     }
 }
 
+/**
+ * 
+ * @param {string} mintermsInput - minterms inputted by the user
+ * @param {string} variablesInput - variables inputted by the user
+ * @returns Component displaying the given boolean function in notation form
+ */
 function GivenFunction({mintermsInput, variablesInput}) {
 
     let variables = ''; 
@@ -88,6 +129,11 @@ function GivenFunction({mintermsInput, variablesInput}) {
     ); 
 }
 
+/**
+ * 
+ * @param {Map} groupMap - contains the group number as key and the array of minterm objects as the value
+ * @returns Component displaying a dynamic table containing the minterms grouped based on the number of ones in the binary representation
+ */
 function MintermsTable({groupMap}) {
     return (
         <div className='table-container'>
@@ -120,10 +166,19 @@ function MintermsTable({groupMap}) {
     ); 
 }
 
+/**
+ * 
+ * @param {Map} groupMap - contains the group number as key and the array of minterm objects as the value
+ * @param {int} index - index based on allTables array
+ * @param {Array} variablesArray - array of variables inputted by the user
+ * @param {function} getVariableEquivalent - function that converts a binary representation to variable representation 
+ * @returns Table for one round of pairwise simplification
+ */
 function SimplificationTable({groupMap, index, variablesArray, getVariableEquivalent}) {
     return(
         <div className='table-container'>
             <p>{(index === 0) ? '' : 'Round ' + index + ' Pairing'}</p>
+            <p>{(index === 4) ? 'Duplicate matched pairs are not shown for round 4 and up.' : ''}</p>
             <table>
                 <thead>
                     <tr>
@@ -155,8 +210,14 @@ function SimplificationTable({groupMap, index, variablesArray, getVariableEquiva
 
 }
 
+/**
+ * 
+ * @param {Array} variablesArray - array of variables inputted by the user
+ * @returns array of all minterms based on the number of variables
+ */
 function getAllPossibleMinterms(variablesArray) {
     let allMinterms = []; 
+    // All minterms are from 0 to 2^n - 1 where n is the number of variables
     for(let index = 0; index < Math.pow(2, variablesArray.length); index++) {
         allMinterms.push(index); 
     }
@@ -165,6 +226,12 @@ function getAllPossibleMinterms(variablesArray) {
 
 }
 
+/**
+ * 
+ * @param {int} minterm - minterm in integer value 
+ * @param {Array} variablesArray - array of variables inputted by the user
+ * @returns binary equivalent of a minterm that is in integer
+ */
 function getBinaryEquivalent(minterm, variablesArray) { 
     let binaryEquivalent = ''; 
     let remainingValue = minterm
@@ -183,12 +250,18 @@ function getBinaryEquivalent(minterm, variablesArray) {
 
 }
 
+/**
+ * 
+ * @param {string} binaryEquivalent - binary representation of a minterm or matched pair
+ * @param {Array} variablesArray - array of variables inputted by the user
+ * @returns variable equivalent of a binary representation
+ */
 function getVariableEquivalent(binaryEquivalent, variablesArray) {
     let variableEquivalent = ''; 
 
     for(let index = 0; index < variablesArray.length; index++) {
         if(binaryEquivalent[index] === '0') {
-            variableEquivalent += variablesArray[index] + "'"; 
+            variableEquivalent += variablesArray[index] + "'"; // add a ' if the element is a zero
         } else if (binaryEquivalent[index] === '1') {
             variableEquivalent += variablesArray[index]; 
         }
@@ -198,6 +271,11 @@ function getVariableEquivalent(binaryEquivalent, variablesArray) {
 
 }
 
+/**
+ * 
+ * @param {string} binaryEquivalent - binary equivalent of a minterm or matched pair
+ * @returns the number of ones on a binary representation
+ */
 function getNumberOfOnes(binaryEquivalent) {
     let numberOfOnes = 0; 
     for(let index = 0; index < binaryEquivalent.length; index++) {
@@ -208,6 +286,13 @@ function getNumberOfOnes(binaryEquivalent) {
     return numberOfOnes; 
 }
 
+/**
+ * Inserts a new instantiated minterm object in a map based on its group number (number of ones in binary representation)
+ * @param {Map} groupMap - contains the group number as key and the array of minterm objects as the value. It represents the data of a table in pairwise simplification
+ * @param {int} minterms - minterm in int or matched pair
+ * @param {string} binaryEquivalent - binary equivalent of a minterm
+ * @param {int} numberOfOnes - number of ones of a binary equivalent of a minterm
+ */
 function insertInMap(groupMap, minterms, binaryEquivalent, numberOfOnes) {
     let mintermsObjectsArray = []; 
 
@@ -221,6 +306,12 @@ function insertInMap(groupMap, minterms, binaryEquivalent, numberOfOnes) {
 
 }
 
+/**
+ * 
+ * @param {array} complementMintermsArray - array of minterms not included on the minterms inputted by the user
+ * @param {array} variablesArray - array of variables inputted by the user
+ * @returns a map wherein key = group number (number of ones in the binary representation of a minterm), value = array of minterms objects
+ */
 function createGroupMap(complementMintermsArray, variablesArray) {
     let groupMap = new Map(); 
     
@@ -236,35 +327,51 @@ function createGroupMap(complementMintermsArray, variablesArray) {
     return groupMap; 
 }
 
+/**
+ * 
+ * @param {string} binary1 - binary equivalent of a minterm object from group n
+ * @param {string} binary2 - binary equivalent of a minterm object from group n + 1
+ * @returns a new binary representation of the matched pair if they differ by 1 bit/variable, otherwise null
+ */
 function canCombine(binary1, binary2) {
-    let diff = 0; 
+    let difference = 0; 
     let newBinary = ''; 
 
     for(let index = 0; index < binary1.length; index++) {
         if(binary1[index] !== binary2[index]) {
-            newBinary += '_'; 
-            diff++; 
+            newBinary += '_'; // adds an underscore on the index where binary1 and binary2 differs
+            difference++; 
+            if (difference > 1) return null; // returns null if binary1 and binary2 are not different by only 1 bit/variable
         }
         else {
             newBinary += binary1[index]; 
         }
     }
 
-    return diff === 1 ? newBinary : null;
+    return newBinary;
 
 }
 
+/**
+ * Checks if the binary representation of every minterm or existing matched pair can be matched from group n to ones in group n + 1. If so, placed them in the matchedPairsMap.
+ * @param {Array} mintermsObjectsArray1 - contains mintermObjects from group n 
+ * @param {Array} mintermsObjectsArray2 - contains mintermObjects from group n + 1
+ * @param {Map} matchedPairsMap - a map wherein an array of new matched mintermObjects are placed during the current round of pairwise simplification as a value based on the key which is the group number.
+ */
 function matchPairs(mintermsObjectsArray1, mintermsObjectsArray2, matchedPairsMap) {
     for(let i = 0; i < mintermsObjectsArray1.length; i++) {
+        let binary1 = mintermsObjectsArray1[i].binary; 
+
         for(let j = 0; j < mintermsObjectsArray2.length; j++) {
-            let binary1 = mintermsObjectsArray1[i].binary; 
+    
             let binary2 = mintermsObjectsArray2[j].binary; 
             let newBinary = canCombine(binary1, binary2); 
 
-            if(newBinary !== null) {
+            // if a binary representation is created from the two binaries of the two mintermObjects being matched, then insert in the matched pairs map
+            if(newBinary !== null) { 
                 let minterms = [mintermsObjectsArray1[i].minterms, mintermsObjectsArray2[j].minterms].join('-');
                 let numberOfOnes = getNumberOfOnes(newBinary); 
-                mintermsObjectsArray1[i].isMatched = true; 
+                mintermsObjectsArray1[i].isMatched = true; // set these mintermObjects as matched.
                 mintermsObjectsArray2[j].isMatched = true; 
                 insertInMap(matchedPairsMap, minterms, newBinary, numberOfOnes);     
             }
@@ -275,8 +382,13 @@ function matchPairs(mintermsObjectsArray1, mintermsObjectsArray2, matchedPairsMa
 
 }
 
+/**
+ * Inserts all mintermObjects that are unmatched to the primeImplicantsList
+ * @param {Map} groupMap - map that contains the group number as key and the array of minterm objects as the value.
+ * @param {Array} primeImplicantsList - contains all prime implicants (all mintermObjects that are not matched)
+ */
 function getAllUnmatchedPairs(groupMap, primeImplicantsList) {
-    for (const [key, group] of groupMap.entries()) {
+    for (const group of groupMap.values()) {
         for (let i = 0; i < group.length; i++) {
             if (group[i].isMatched === false) {
                 primeImplicantsList.push(group[i]); 
@@ -285,20 +397,30 @@ function getAllUnmatchedPairs(groupMap, primeImplicantsList) {
     }
 }
 
-function removeDuplicates(primeImplicantsList) {
+/**
+ * 
+ * @param {Array} mintermObjectsList - an array of mintermObjects that may have the same binary representation
+ * @returns a new mintermObjects Array wherein all have unique binary representation.
+ */
+function removeDuplicates(mintermObjectsList) {
     const binaryList = new Set(); 
-    return primeImplicantsList.filter((primeImplicant) => {
-        if (binaryList.has(primeImplicant.binary)) {
+    return mintermObjectsList.filter((mintermObject) => {
+        if (binaryList.has(mintermObject.binary)) {
             return false; 
         }
         else {
-            binaryList.add(primeImplicant.binary) 
+            binaryList.add(mintermObject.binary) 
             return true; 
         }
     }); 
     
 }
 
+/**
+ * 
+ * @param {*} primeImplicantsList - contains all prime implicants (all mintermObjects that are not matched)
+ * @returns a list of binary representation of all prime implicants
+ */
 function getBinaryList(primeImplicantsList) {
     let binaryList = []; 
     for(const primeImplicant of primeImplicantsList) {
@@ -309,10 +431,15 @@ function getBinaryList(primeImplicantsList) {
 
 }
 
+/**
+ * 
+ * @param {*} primeImplicantsList - contains all prime implicants (all mintermObjects that are not matched)
+ * @returns a list of all minterm or matched pairs (eg. ["1-3", "2-3"]) of all prime implicants
+ */
 function getMintermsList(primeImplicantsList) {
     let mintermList = []; 
     for (const primeImplicant of primeImplicantsList) {
-        mintermList.push(primeImplicant.minterms) 
+        mintermList.push(String(primeImplicant.minterms)) 
     }
 
     return mintermList; 
