@@ -33,7 +33,7 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
     while (true) {
         let matchedPairsMap = new Map(); 
 
-        // For each group map, compare the binary representation of the minterms of group n and group n + 1
+        // For each group map, compare the binary representation of the minterms or matched pairs of group n and group n + 1
         for (const key of groupMap.keys()) {
             
             // If group n + 1 does not exist, no comparison can be made and must move to next group for comparison.
@@ -46,7 +46,7 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
             matchPairs(mintermsObjectsArray1, mintermsObjectsArray2, matchedPairsMap); // main function for checking for matched pairs
         }
 
-        // After a round of pairwise simplification, get all unmatched pairs if there is any and store it into prime implicant list
+        // After a round of pairwise simplification, get all unmatched pairs or unmatched minterms if there is any and store it into prime implicant list
         getAllUnmatchedPairs(groupMap, primeImplicantsList);
 
         // condition needed to break the loop
@@ -66,7 +66,7 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
         round++;
 
         allTables.push(matchedPairsMap); 
-        groupMap = matchedPairsMap; 
+        groupMap = matchedPairsMap; // set the matchPairsMap as the new groupMap to check if there is any new matched pairs
         
     }
 
@@ -85,10 +85,10 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
 
     return (
         <div className='pairwise-container'>
-            <GivenFunction mintermsInput={mintermsInput} variablesInput={variablesInput} />
+            <GivenFunction mintermsArray={mintermsArray} variablesArray={variablesArray} />
             <MintermsTable groupMap={allTables[0]}/>
-            <p>Pairwise Simplification</p>
-            <p>This is done by comparing the minterms of group n and n+1 and pairing them up if they differ by only 1 variable</p>
+            <p className='title'>Pairwise Simplification</p>
+            <p className='subtitle'>This is done by comparing the minterms of group n and n+1 and pairing them up if they differ by only 1 variable</p>
             {
                 allTables.map((groupMap, index) => <SimplificationTable groupMap={groupMap} index={index} variablesArray = {variablesArray} getVariableEquivalent={getVariableEquivalent}/>)
             }
@@ -99,32 +99,40 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
 // Minterm object for each table containing necessary information
 class MintermObject {
     constructor(minterms, binary, groupNum) {
-      this.minterms = minterms; // either a single minterm or a string of merged minterms using -
+      this.minterms = minterms; // either a single minterm or a matched pair which is a string of merged minterms using -
       this.binary = binary;     // binary representation using string with "_"
       this.groupNum = groupNum; // number of ones in the binary representation
-      this.isMatched = false;
+      this.isMatched = false; // status if minterm or matched pair is matched
     }
 }
 
 /**
  * 
- * @param {string} mintermsInput - minterms inputted by the user
- * @param {string} variablesInput - variables inputted by the user
+ * @param {Array} mintermsInput - minterms inputted by the user
+ * @param {Array} variablesInput - variables inputted by the user
  * @returns Component displaying the given boolean function in notation form
  */
-function GivenFunction({mintermsInput, variablesInput}) {
+function GivenFunction({mintermsArray, variablesArray}) {
 
-    let variables = ''; 
-    for(let index = 0; index < variablesInput.length; index++) {
-        variables += variablesInput[index]; 
-        if (index !== variablesInput.length - 1) {
-            variables += ', '
+    let variablesDisplay = ''; 
+    for(let index = 0; index < variablesArray.length; index++) {
+        variablesDisplay += variablesArray[index]; 
+        if (index !== variablesArray.length - 1) {
+            variablesDisplay += ', '
         }
     }
     
+    let mintermsDisplay = ''; 
+    for(let index = 0; index < mintermsArray.length; index++) {
+        mintermsDisplay += mintermsArray[index]; 
+        if (index !== mintermsArray.length - 1) {
+            mintermsDisplay += ', '
+        }
+    }
+
     return(
         <div className='given'>
-            <p>Given: F({variables}) = ∑({mintermsInput})</p>
+            <p>Given: F({variablesDisplay}) = ∑({mintermsDisplay})</p>
         </div>
     ); 
 }
@@ -353,7 +361,7 @@ function canCombine(binary1, binary2) {
 }
 
 /**
- * Checks if the binary representation of every minterm or existing matched pair can be matched from group n to ones in group n + 1. If so, placed them in the matchedPairsMap.
+ * Checks if the binary representation of every minterm or existing matched pair can be matched from group n to those in group n + 1. If so, placed them in the matchedPairsMap.
  * @param {Array} mintermsObjectsArray1 - contains mintermObjects from group n 
  * @param {Array} mintermsObjectsArray2 - contains mintermObjects from group n + 1
  * @param {Map} matchedPairsMap - a map wherein an array of new matched mintermObjects are placed during the current round of pairwise simplification as a value based on the key which is the group number.

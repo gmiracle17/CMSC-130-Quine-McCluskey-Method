@@ -1,10 +1,19 @@
 .given {
     font-size: 3.2vmin;
+    margin-bottom: 40px;
 }
 
+.title {
+    font-size: 3.2vmin;
+    margin-top: 40px;
+}
+
+.subtitle {
+    margin: 0px;
+}
 
 .table-container {
-margin-top: 40px;
+margin-bottom: 50px;
 }
 
 table {
