@@ -16,5 +16,5 @@ npm i
 npm start
 ```
 4. Open http://localhost:3000 in your browser to view the app.
-In the project directory, you can run:
 
+### Happy solving!
