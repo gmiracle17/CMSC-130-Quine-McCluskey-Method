@@ -46,7 +46,7 @@ function App() {
                     <PrimeImplicantTable     
                         minterms={mintermsArray} 
                         variables={variablesArray}
-                        maxtermsList={mintermsList}
+                        mintermsList={mintermsList}
                         binaryList={binaryList}
                         setEssentialPrimeImplicants={setEssentialPrimeImplicants}
                         setNeededNonessentialPrimeImplicants={setNeededNonessentialPrimeImplicants}
