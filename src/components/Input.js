@@ -1,6 +1,17 @@
 import { useState } from "react"
 import './Input.css';
 
+/**
+ * Main function that renders the input section of the Quine McCluskey Method Solver
+ * @param {function} setActiveTab - sets the tab to display in the browser
+ * @param {string} mintermInput - state variable that contains the minterms inputted by the user
+ * @param {string} variablesInput - state variable that contains the variables inputted by the user
+ * @param {function} setMintermsInput - sets the value of the mintermsInput
+ * @param {function} setVariablesInput - sets the value of the variablesInput
+ * @param {function} setMintermsArray - sets the value of the mintermsArray
+ * @param {function} setVariablesArray - sets the value of the variablesArray
+ * @returns a component rendered in the browser where the user can type the input of minterms and variables, and press the solve button
+ */
 function InputSection({setActiveTab,mintermsInput, variablesInput, setMintermsInput, setVariablesInput, setMintermsArray, setVariablesArray}) {
     
     return (
@@ -127,11 +138,9 @@ function SolveButton({mintermsInput, variablesInput, HandleInputs, setMintermsAr
  * @returns an array of error messages
  */
 function HandleInputs(mintermsInput, variablesInput) {
-
     let mintermsValidateArray = validateMinterms(mintermsInput); 
     let mintermErrorMessages = mintermsValidateArray.slice(0, mintermsValidateArray.length - 1);
     let variableErrorMessages = validateVariables(variablesInput, mintermsValidateArray[3]); 
-    
 
     return [...mintermErrorMessages, ...variableErrorMessages]; 
 }
