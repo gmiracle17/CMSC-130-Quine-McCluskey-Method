@@ -2,20 +2,20 @@ import React, { useEffect } from 'react';
 import './PrimeImplicantTable.css';
 
 /**
- * Prime Implicant Table Component - visualizes relationship between prime implicants and maxterms in a table,
+ * Prime Implicant Table Component - visualizes relationship between prime implicants and minterms in a table,
  * highlighting essential and needed non-essential prime implicants for simplification
  *
  * @param {Array} variables - array of Boolean variables (e.g., ['A', 'B', 'C']) from Input.js
  * @param {Array} minterms - array of minterm numbers (e.g., [1, 4, 5]) from Input.js
- * @param {Array} maxtermsList - array of maxterm groupings (e.g., ["2-6-10", "3-7-11"]) from Pairwise.js
+ * @param {Array} mintermsList - array of minterm groupings (e.g., ["2-6-10", "3-7-11"]) from Pairwise.js
  * @param {Array} binaryList - array of binary representations for prime implicants (e.g., ["010_", "_110"]) from Pairwise.js
  * @param {Function} setEssentialPrimeImplicants - callback to store essential prime implicants in App.js for POS.js to use
  * @param {Function} setNeededNonessentialPrimeImplicants - callback to store needed non-essential prime implicants in App.js for POS.js to use
  * 
- * @returns {JSX.Element} Table showing prime implicants, coverage of maxterms, and essential/needed nonessential prime implicants
+ * @returns {JSX.Element} Table showing prime implicants, coverage of minterms, and essential/needed nonessential prime implicants
  */
 
-function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, setEssentialPrimeImplicants, setNeededNonessentialPrimeImplicants }) {
+function PrimeImplicantTable({ variables, minterms, mintermsList, binaryList, setEssentialPrimeImplicants, setNeededNonessentialPrimeImplicants }) {
     /**
      * Generate primeImplicantsList - array of prime implicants from the binary representation
      */
@@ -30,77 +30,77 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
     });
 
     /**
-     * Generate maxterms - array of maxterms (terms not in minterms) by creating array of all terms from 0 to 2^n-1
+     * Generate mintermComplements - array of minterms (terms not in minterms) by creating array of all terms from 0 to 2^n-1
      * and excluding terms that are in minterms
      */
     const totalTerms = 2 ** variables.length; // maxterms + minterms
-    const maxterms = Array.from({ length: totalTerms }, (term, index) => index).filter(index => !minterms.includes(index));
+    const mintermComplements = Array.from({ length: totalTerms }, (term, index) => index).filter(index => !minterms.includes(index));
 
     /**
-     * Maxterm Column headers for the table based on maxterms
+     * Minterm Column headers for the table based on minterms
      */
-    const maxtermColumns = maxterms.map((maxterm, i) => (
-        <div key={i} className="maxtermColumn">{maxterm}</div>
+    const mintermColumns = mintermComplements.map((minterm, i) => (
+        <div key={i} className="mintermColumn">{minterm}</div>
     ));
 
     /**
-     * Generate xMap - maps prime implicants to the maxterms they cover
+     * Generate xMap - maps prime implicants to the minterms they cover
      */
-    const xMap = maxtermsList.map(maxtermGroup => {
-        const maxtermGroupStr = String(maxtermGroup);
-        const coveredSet = maxtermGroupStr.includes('-') ? new Set(maxtermGroupStr.split('-').map(Number)) : new Set([Number(maxtermGroupStr)]);
+    const xMap = mintermsList.map(mintermGroup => {
+        const mintermGroupStr = String(mintermGroup);
+        const coveredSet = mintermGroupStr.includes('-') ? new Set(mintermGroupStr.split('-').map(Number)) : new Set([Number(mintermGroupStr)]);
         
-        return maxterms.map(maxterm => coveredSet.has(maxterm));
+        return mintermComplements.map(minterm => coveredSet.has(minterm));
     });            
 
     /**
-     * Generate xCounts - maps count of prime implicants that cover each maxterm
+     * Generate xCounts - maps count of prime implicants that cover each minterm
      */
-    const xCounts = maxterms.map((maxterm, maxtermIndex) =>
-        xMap.reduce((count, primeImplicantRow) => count + (primeImplicantRow[maxtermIndex] ? 1 : 0), 0)
+    const xCounts = mintermComplements.map((minterm, mintermIndex) =>
+        xMap.reduce((count, primeImplicantRow) => count + (primeImplicantRow[mintermIndex] ? 1 : 0), 0)
     );
 
     /**
-     * Getting essential prime implicants and maxterms covered by them
+     * Getting essential prime implicants and minterms covered by them
      * 1. Check column with xCounts = 1
      * 2. Find prime implicant using respective row index
      * 3. Add prime implicant to essentialPrimeImplicants (set of essential prime implicants)
-     * 4. Get maxterms covered by said prime implicant and store them in maxtermsCoveredByEssentialPIs for tracking
+     * 4. Get minterms covered by said prime implicant and store them in mintermsCoveredByEssentialPIs for tracking
      */
     const essentialPrimeImplicants = new Set();
-    const maxtermsCoveredByEssentialPIs = new Set();
+    const mintermsCoveredByEssentialPIs = new Set();
 
-    maxterms.forEach((maxterm, columnIndex) => {
+    mintermComplements.forEach((minterm, columnIndex) => {
         if (xCounts[columnIndex] === 1) {
             const rowIndex = xMap.findIndex(row => row[columnIndex]);
             if (rowIndex !== -1) {
                 const primeImplicant = primeImplicantsList[rowIndex];
                 essentialPrimeImplicants.add(primeImplicant);
     
-                const maxtermGroup = String(maxtermsList[rowIndex]);
-                const terms = maxtermGroup.includes('-') ? maxtermGroup.split('-').map(Number) : [Number(maxtermGroup)];
+                const mintermGroup = String(mintermsList[rowIndex]);
+                const terms = mintermGroup.includes('-') ? mintermGroup.split('-').map(Number) : [Number(mintermGroup)];
     
-                terms.forEach(term => maxtermsCoveredByEssentialPIs.add(term));
+                terms.forEach(term => mintermsCoveredByEssentialPIs.add(term));
             }
         }
     });    
 
     /**
-     * Build table rows to show prime implicants and X marks for covered maxterms
+     * Build table rows to show prime implicants and X marks for covered minterms
      * 1. Mark rows containing essential prime implicants as true in isEssentialRow using essentialPrimeImplicants set and primeImplicantsList
      * 2. Mark X marks in xMap and has xCounts = 1. Set their classname as essential to color them purple
      * 3. Mark other X marks in the same row of X mark in 2. Set their classname as essentialFriend to color them black
      * 4. Put X in all cells marked as X in xMap
      */
-    const tableRows = xMap.map((maxtermCoverage, rowIndex) => {
+    const tableRows = xMap.map((mintermCoverage, rowIndex) => {
         const isEssentialRow = essentialPrimeImplicants.has(primeImplicantsList[rowIndex]);
     
         return (
             <div key={rowIndex} className="tableRow">
                 <div className="primeImplicantEntries">{primeImplicantsList[rowIndex]}</div>
-                <div className="maxtermEntries">{maxtermsList[rowIndex]}</div>
+                <div className="mintermEntries">{mintermsList[rowIndex]}</div>
 
-                {maxtermCoverage.map((isMarkedX, columnIndex) => {
+                {mintermCoverage.map((isMarkedX, columnIndex) => {
                     const isEssentialX = isMarkedX && xCounts[columnIndex] === 1;
                     const className = isEssentialX ? 'essential' : isEssentialRow && isMarkedX ? 'essentialFriend' : '';
     
@@ -119,16 +119,16 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
      * 
      * 1. Get prime implicant from primeImplicantsList
      * 2.1 If already contained in essentialPrimeImplicants or neededPrimeImplicants, skip to next prime implicant.
-     * 2.2 If not, store uncovered maxterms it covers in currentlyCovered
+     * 2.2 If not, store uncovered minterms it covers in currentlyCovered
      * 3.1 If currentlyCovered > mostCoveredMaxterms, set primeImplicant as neededPrimeImplicant and currentlyCovered as mostCoveredMaxterms
      * 3.2 If not, skip to next prime implicant
      * 4. Once all prime implicants are checked, store neededPrimeImplicant in neededNonessentialPrimeImplicants
-     * 5. Remove maxterms in mostCoveredTerms from uncoveredMaxterms
-     * 6. Repeat until size of uncoveredMaxterms is 0.
+     * 5. Remove minterms in mostCoveredTerms from uncoveredMaxterms
+     * 6. Repeat until size of uncoveredMaxterms is 0
      */
     const neededNonessentialPrimeImplicants = new Set();
-    const maxtermsCoveredByNeededNonessentialPIs = new Set();
-    let uncoveredMaxterms = maxterms.filter(maxterm => !maxtermsCoveredByEssentialPIs.has(maxterm));
+    const mintermsCoveredByNeededNonessentialPIs = new Set();
+    let uncoveredMaxterms = mintermComplements.filter(minterm => !mintermsCoveredByEssentialPIs.has(minterm));
 
     function findNeededPrimeImplicant(currentUncovered) {
         let neededPrimeImplicant = null;
@@ -139,10 +139,10 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
 
             if (essentialPrimeImplicants.has(primeImplicant) || neededNonessentialPrimeImplicants.has(primeImplicant)) continue;
 
-            const maxtermGroup = String(maxtermsList[index]);
-            const currentlyCovered = maxtermGroup.includes('-')
-                ? maxtermGroup.split('-').map(Number).filter(maxterm => currentUncovered.includes(maxterm))
-                : [Number(maxtermGroup)].filter(maxterm => currentUncovered.includes(maxterm));
+            const mintermGroup = String(mintermsList[index]);
+            const currentlyCovered = mintermGroup.includes('-')
+                ? mintermGroup.split('-').map(Number).filter(minterm => currentUncovered.includes(minterm))
+                : [Number(mintermGroup)].filter(minterm => currentUncovered.includes(minterm));
 
             if (currentlyCovered.length > mostCoveredMaxterms.length) {
                 neededPrimeImplicant = primeImplicant;
@@ -157,12 +157,12 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
         const { neededPrimeImplicant, mostCoveredMaxterms } = findNeededPrimeImplicant(uncoveredMaxterms);
 
         neededNonessentialPrimeImplicants.add(neededPrimeImplicant);
-        mostCoveredMaxterms.forEach(maxterm => maxtermsCoveredByNeededNonessentialPIs.add(maxterm));
-        uncoveredMaxterms = uncoveredMaxterms.filter(maxterm => !mostCoveredMaxterms.includes(maxterm));
+        mostCoveredMaxterms.forEach(minterm => mintermsCoveredByNeededNonessentialPIs.add(minterm));
+        uncoveredMaxterms = uncoveredMaxterms.filter(minterm => !mostCoveredMaxterms.includes(minterm));
     }
 
      /**
-      * Creates a row showing a checkmark icon for each maxterm:
+      * Creates a row showing a checkmark icon for each minterm:
       * ✔️ - covered by essential PI
       * ➖ - covered by needed non-essential PI
       * ❌ - not yet covered
@@ -170,10 +170,10 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
     const checkRow = (
         <div className="checkRow">
             <div className="primeImplicantEntries"></div>
-            <div className="maxtermEntries"></div>
-            {maxterms.map((maxterm, columnIndex) => {
-                const isCoveredByEssential = maxtermsCoveredByEssentialPIs.has(maxterm);
-                const isCoveredByNonEssential = maxtermsCoveredByNeededNonessentialPIs.has(maxterm);
+            <div className="mintermEntries"></div>
+            {mintermComplements.map((minterm, columnIndex) => {
+                const isCoveredByEssential = mintermsCoveredByEssentialPIs.has(minterm);
+                const isCoveredByNonEssential = mintermsCoveredByNeededNonessentialPIs.has(minterm);
 
                 return (
                     <div key={columnIndex} className={`checkEntries ${isCoveredByEssential ? 'essentialCheck' : 'nonEssentialCheck'}`}>
@@ -209,8 +209,8 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
                             {checkRow}
                             <div className="tableHeader">
                                 <div className="primeImplicantEntries">Prime Implicants</div>
-                                <div className="maxtermEntries">Maxterms</div>
-                                {maxtermColumns}
+                                <div className="mintermEntries">Minterms</div>
+                                {mintermColumns}
                             </div>
                             {tableRows}
                         </div>
@@ -238,7 +238,7 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
                             {neededNonessentialPrimeImplicants.size === 0 ? (<span></span>) : (
                                 <>
                                     Note: Needed Non-Essential Prime Implicants are chosen by taking the nonessential prime implicant <br />
-                                    that covers the most number of maxterms until all maxterms are covered
+                                    that covers the most number of minterms until all minterms are covered
                                 </>
                             )}
                         </small>
@@ -247,9 +247,9 @@ function PrimeImplicantTable({ variables, minterms, maxtermsList, binaryList, se
                         <h3>LEGEND FOR TABLE <br /></h3>
                         <div className="legends">
                             <div>
-                                ✔️ - maxterm covered by essential prime implicant <br />
-                                ➖ - maxterm covered by nonessential prime implicant <br />
-                                ❌ - maxterm covered by neither of the two <br />
+                                ✔️ - minterm covered by essential prime implicant <br />
+                                ➖ - minterm covered by nonessential prime implicant <br />
+                                ❌ - minterm covered by neither of the two <br />
                             </div>
                             <div>
                                 <span className="essentialDot">⬤</span> - X entry alone in column<br />
