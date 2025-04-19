@@ -27,38 +27,19 @@ function POS({ minterms, variables, essentialPrimeImplicants, neededNonessential
     function getPOS(essentialPrimeImplicants, neededNonessentialPrimeImplicants) {
         const totalTerms = 2 ** variables.length;
         const allTerms = Array.from({ length: totalTerms }, (term, index) => index);
-    
-        const inputMinterms = [];
-        minterms.forEach((m) => {inputMinterms.push(Number(m));});
+        const inputMinterms = minterms.map(Number);
 
-        let containsAllTerms = true;
-
-        if (inputMinterms.length !== allTerms.length) {
-            containsAllTerms = false;
-        } 
-        else {
-            allTerms.forEach((m) => {
-                if (inputMinterms.indexOf(m) === -1) {
-                    containsAllTerms = false;
-                }
-            });
-        }
-
-        if (containsAllTerms) { return "1"; }
+        let containsAllTerms = allTerms.every(term => inputMinterms.includes(term));
+        if (containsAllTerms) return "1";
     
         const finalPrimeImplicants = essentialPrimeImplicants.concat(neededNonessentialPrimeImplicants);
         const posTerms = finalPrimeImplicants.map(primeImplicant => {
-            const literals = primeImplicant.match(/([A-Z]')|[A-Z]/g);
+            const literals = primeImplicant.match(/([a-zA-Z]')|[a-zA-Z]/g);
             const term = literals.map(literal => {
-                if (literal.includes("'")) {
-                    return literal[0];
-                } else {
-                    return literal[0] + "'";
-                }
+                literal.includes ? literal[0] : literal[0] + "'";
             }).join('+');
             return "(" + term + ")";
         });
-    
         return posTerms.join(' ');
     }    
 
@@ -68,9 +49,7 @@ function POS({ minterms, variables, essentialPrimeImplicants, neededNonessential
         <div>
             <div className="container">
                 <h1 className="answerHeader">Product of Sums Form</h1>
-                {/* Display given variables and minterms */}
                 <p className="given">Given: F({Array.from(variables).join(', ')}) = ∑({Array.from(minterms).join(', ')})</p>
-                {/* Display the final POS expression */}
                 <p className="answer">{finalAnswer}</p>
             </div>
             <small>Note: Please visit Prime Implicant Table Tab to update expression</small>
