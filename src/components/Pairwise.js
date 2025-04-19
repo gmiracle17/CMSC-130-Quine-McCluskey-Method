@@ -152,7 +152,7 @@ function GivenFunction({mintermsArray, variablesArray}) {
 function MintermsTable({groupMap}) {
     return (
         <div className='table-container'>
-            <p>Grouping of minterms based on number of ones</p>
+            <p className='grouping'>Grouping of minterms based on number of ones</p>
             <p>Minterms grouped are those that make the function zero as the simplified boolean function is in Product of Sums form</p>
             <table>
                 <thead>
@@ -192,8 +192,8 @@ function MintermsTable({groupMap}) {
 function SimplificationTable({groupMap, index, variablesArray, getVariableEquivalent}) {
     return(
         <div className='table-container'>
-            <p>{(index === 0) ? '' : 'Round ' + index + ' Pairing'}</p>
-            <p>{(index === 4) ? 'Duplicate matched pairs are not shown for round 4 and up.' : ''}</p>
+            {index === 0 ? null : <p>Round {index} Pairing</p>}
+            {index === 4 ? <p>Duplicate matched pairs are not shown for round 4 and up.</p> : null}
             <table>
                 <thead>
                     <tr>
