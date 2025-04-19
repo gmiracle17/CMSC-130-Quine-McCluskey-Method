@@ -82,7 +82,7 @@ function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList
         // return this component since the function is equal to 1
         return (
             <div>
-                <p className='title'>No pairwise simplification needed since there are no compliment minterms</p>
+                <p className='title'>No pairwise simplification needed since there are no complement minterms</p>
             </div>
         ); 
     }
@@ -323,7 +323,7 @@ function insertInMap(groupMap, minterms, binaryEquivalent, numberOfOnes) {
  * 
  * @param {array} complementMintermsArray - array of minterms not included on the minterms inputted by the user
  * @param {array} variablesArray - array of variables inputted by the user
- * @returns a map wherein key = group number (number of ones in the binary representation of a minterm), value = array of minterms objects based on the compliment minterms
+ * @returns a map wherein key = group number (number of ones in the binary representation of a minterm), value = array of minterms objects based on the complement minterms
  */
 function createGroupMap(complementMintermsArray, variablesArray) {
     let groupMap = new Map(); 
