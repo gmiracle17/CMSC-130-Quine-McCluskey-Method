@@ -2,7 +2,6 @@ import React from 'react';
 import { useEffect } from 'react';
 import './Pairwise.css';
 
-//TODO: Make the algorithm more efficient.
 
 /**
  * Main function responsible for Pairwise Simplification
@@ -12,7 +11,7 @@ import './Pairwise.css';
  * @param {function} setMintermsList - function passed as prop to set Minterms List of Prime Implicants
  * @returns Grouped Minterms Table and Pairwise Simplfication Table Rounds
  */
-function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray, setBinaryList, setMintermsList}) {
+function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList}) {
     
     // Get all posible minterms based on the number of variables
     const allMinterms = getAllPossibleMinterms(variablesArray); 
@@ -25,7 +24,7 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
     // create a map wherein key = group number (number of ones), value = array of minterm objects
     let groupMap = createGroupMap(complementMintermsArray, variablesArray); 
     allTables.push(groupMap);
-    let primeImplicantsList = []; // holds all prime implicants
+    let primeImplicantsList = []; // holds all prime implicants objects
     
     let round = 1;
 
@@ -82,12 +81,20 @@ function Pairwise({mintermsInput, variablesInput, mintermsArray, variablesArray,
         setBinaryList(getBinaryList(primeImplicantsList));
         setMintermsList(getMintermsList(primeImplicantsList));
       }, []);
+    
+    if (complementMintermsArray.length === 0) {
+        return (
+            <div>
+                <p className='title'>No pairwise simplification needed since there are no compliment minterms</p>
+            </div>
+        ); 
+    }
 
     return (
         <div className='pairwise-container'>
             <GivenFunction mintermsArray={mintermsArray} variablesArray={variablesArray} />
             <MintermsTable groupMap={allTables[0]}/>
-            <p className='title'>Pairwise Simplification</p>
+            <h1 className='title'>Pairwise Simplification</h1>
             <p className='subtitle'>This is done by comparing the minterms of group n and n+1 and pairing them up if they differ by only 1 variable</p>
             {
                 allTables.map((groupMap, index) => <SimplificationTable groupMap={groupMap} index={index} variablesArray = {variablesArray} getVariableEquivalent={getVariableEquivalent}/>)
@@ -132,7 +139,7 @@ function GivenFunction({mintermsArray, variablesArray}) {
 
     return(
         <div className='given'>
-            <p>Given: F({variablesDisplay}) = ∑({mintermsDisplay})</p>
+            <h1>Given: F({variablesDisplay}) = ∑({mintermsDisplay})</h1>
         </div>
     ); 
 }

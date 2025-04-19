@@ -1,10 +1,10 @@
 .given {
-    font-size: 3.2vmin;
+    font-size: 2.2vmin;
     margin-bottom: 40px;
 }
 
 .title {
-    font-size: 3.2vmin;
+    font-size: 4vmin;
     margin-top: 40px;
 }
 
@@ -13,12 +13,14 @@
 }
 
 .table-container {
-margin-bottom: 50px;
+    margin-top: 0px;
+    margin-bottom: 50px;
 }
 
 table {
-    width: 100%;
+    width: 50%;
     border-collapse: collapse;
+    margin: 0% 25%; 
 }
 
 td, th {
@@ -28,3 +30,6 @@ td, th {
     background-color: #36393e;
 }
 
+p {
+    font-size: 2.5vmin;
+}

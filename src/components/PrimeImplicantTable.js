@@ -8,7 +8,7 @@ import './PrimeImplicantTable.css';
  * @param {Array} variables - array of Boolean variables (e.g., ['A', 'B', 'C']) from Input.js
  * @param {Array} minterms - array of minterm numbers (e.g., [1, 4, 5]) from Input.js
  * @param {Array} mintermsList - array of minterm groupings (e.g., ["2-6-10", "3-7-11"]) from Pairwise.js
- * @param {Array} primaryImplicantList - array of binary representations for prime implicants (e.g., ["010_", "_110"]) from Pairwise.js
+ * @param {Array} binaryList - array of binary representations for prime implicants (e.g., ["010_", "_110"]) from Pairwise.js
  * @param {Function} setEssentialPrimeImplicants - callback to store essential prime implicants in App.js for POS.js to use
  * @param {Function} setNeededNonessentialPrimeImplicants - callback to store needed non-essential prime implicants in App.js for POS.js to use
  * 
@@ -18,7 +18,6 @@ import './PrimeImplicantTable.css';
 function PrimeImplicantTable({ variables, minterms, mintermsList, binaryList, setEssentialPrimeImplicants, setNeededNonessentialPrimeImplicants }) {
     /**
      * Generate primeImplicantsList - array of prime implicants from the binary representation
-     * Delete this nalang if ppass nalang primeImplicantList
      */
     const primeImplicantsList = binaryList.map(binary => {
         if (binary.length === 1) {

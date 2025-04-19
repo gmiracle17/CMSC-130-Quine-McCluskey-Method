@@ -33,8 +33,6 @@ function App() {
             case 'pairwise':
                 return inputsAreValid ? (
                     <Pairwise
-                        mintermsInput={mintermsInput}
-                        variablesInput={variablesInput} 
                         mintermsArray={mintermsArray} 
                         variablesArray={variablesArray} 
                         setBinaryList={setBinaryList} 
