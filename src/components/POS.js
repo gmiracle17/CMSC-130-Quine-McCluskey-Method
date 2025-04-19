@@ -36,7 +36,7 @@ function POS({ minterms, variables, essentialPrimeImplicants, neededNonessential
         const posTerms = finalPrimeImplicants.map(primeImplicant => {
             const literals = primeImplicant.match(/([a-zA-Z]')|[a-zA-Z]/g);
             const term = literals.map(literal => {
-                literal.includes ? literal[0] : literal[0] + "'";
+                return literal[0] + (literal.includes("'") ? "" : "'")
             }).join('+');
             return "(" + term + ")";
         });
