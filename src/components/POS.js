@@ -24,8 +24,8 @@ function PrimeImplicantTable({ variables, minterms, mintermsList, binaryList, se
         if (binary.length === 1) {
             return variables[0] + (binary === '0' ? "'" : "");
         }
-        return binary.split('').map((bit, i) => 
-            variables[i] + (bit === '0' ? "'" : "")
+        return binary.split('').map((bit, i) =>
+            bit === '_' ? '' : (variables[i] + (bit === '0' ? "'" : ""))
         ).join('');
     });
 
