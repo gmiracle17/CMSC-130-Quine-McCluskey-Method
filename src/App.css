@@ -16,10 +16,7 @@
 
 .App-content {
   padding: 5vmin;
-  display: flex; 
-  align-items: center;
-  justify-content: center;
-
+  
 }
 
 .App-tabs {
@@ -27,6 +24,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  height: max-content;
   font-size: calc(3px + 2vmin);
 }
 

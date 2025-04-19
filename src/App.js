@@ -16,7 +16,7 @@ function App() {
     const [essentialPrimeImplicants, setEssentialPrimeImplicants] = useState([]);
     const [neededNonessentialPrimeImplicants, setNeededNonessentialPrimeImplicants] = useState([]);
 
-    const inputsAreValid = mintermsInput.trim() !== "" && variablesInput.trim() !== "";
+    const inputsAreValid = mintermsArray.length !== 0 && variablesArray.length !== 0; 
 
     const renderContent = () => {
         switch (activeTab) {

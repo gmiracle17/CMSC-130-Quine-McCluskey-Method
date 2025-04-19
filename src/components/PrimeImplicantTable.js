@@ -8,7 +8,7 @@ import './PrimeImplicantTable.css';
  * @param {Array} variables - array of Boolean variables (e.g., ['A', 'B', 'C']) from Input.js
  * @param {Array} minterms - array of minterm numbers (e.g., [1, 4, 5]) from Input.js
  * @param {Array} mintermsList - array of minterm groupings (e.g., ["2-6-10", "3-7-11"]) from Pairwise.js
- * @param {Array} primaryImplicantList - array of prime implicants (e.g., ["AB","C'D'"]) from Pairwise.js
+ * @param {Array} primaryImplicantList - array of binary representations for prime implicants (e.g., ["010_", "_110"]) from Pairwise.js
  * @param {Function} setEssentialPrimeImplicants - callback to store essential prime implicants in App.js for POS.js to use
  * @param {Function} setNeededNonessentialPrimeImplicants - callback to store needed non-essential prime implicants in App.js for POS.js to use
  * 
@@ -22,11 +22,10 @@ function PrimeImplicantTable({ variables, minterms, mintermsList, binaryList, se
      */
     const primeImplicantsList = binaryList.map(binary => {
         if (binary.length === 1) {
-            return binary === '0' ? variables[0] + "'" : variables[0];
+            return variables[0] + (binary === '0' ? "'" : "");
         }
         return binary.split('').map((bit, i) =>
-            bit === '0' ? variables[i] + "'" :
-            bit === '1' ? variables[i] : ''
+            bit === '_' ? '' : (variables[i] + (bit === '0' ? "'" : ""))
         ).join('');
     });
 
