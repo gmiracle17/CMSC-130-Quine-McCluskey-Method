@@ -14,10 +14,10 @@ import './Pairwise.css';
 function Pairwise({mintermsArray, variablesArray, setBinaryList, setMintermsList}) {
     
     // Get all posible minterms based on the number of variables
-    const allMinterms = getAllPossibleMinterms(variablesArray); 
+    let allMinterms = getAllPossibleMinterms(variablesArray); 
     
     // Get all minterms not included in the minterms inputted by the user
-    const complementMintermsArray = allMinterms.filter(m => !mintermsArray.includes(m));
+    let complementMintermsArray = allMinterms.filter(m => !mintermsArray.includes(m));
 
     let allTables = []; // holds all the tables which are each represented by a map
     
@@ -208,7 +208,7 @@ function SimplificationTable({groupMap, index, variablesArray, getVariableEquiva
                             <tr>
                                 <td>{groupNumber}</td>
                                 <td>{obj.minterms}</td>
-                                <td>{obj.binary}</td>
+                                <td className='binary'>{obj.binary}</td>
                                 <td>{obj.isMatched ? 'Yes' : 'No'}</td>
                                 <td>{obj.isMatched ? '': getVariableEquivalent(obj.binary, variablesArray)}</td> {/* Display variable equivalent only if not matched */}
                             </tr>
@@ -431,7 +431,7 @@ function removeDuplicates(mintermObjectsList) {
 
 /**
  * 
- * @param {*} primeImplicantsList - contains all prime implicants (all mintermObjects that are not matched)
+ * @param {Array} primeImplicantsList - contains all prime implicants (all mintermObjects that are not matched)
  * @returns a list of binary representation of all prime implicants
  */
 function getBinaryList(primeImplicantsList) {
@@ -446,7 +446,7 @@ function getBinaryList(primeImplicantsList) {
 
 /**
  * 
- * @param {*} primeImplicantsList - contains all prime implicants (all mintermObjects that are not matched)
+ * @param {Array} primeImplicantsList - contains all prime implicants (all mintermObjects that are not matched)
  * @returns a list of all minterm or matched pairs (eg. ["1-3", "2-3"]) of all prime implicants
  */
 function getMintermsList(primeImplicantsList) {
