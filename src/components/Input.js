@@ -239,7 +239,7 @@ function validateVariables(variablesInput, maxMintermInput) {
 
     if (variablesDuplicates.length === 0 && variablesInput.length > 0) {
         if(variablesArray.length > 6) {
-            sufficientVariablesMessage = 'Maximum number of variables for the input is only 6.'
+            sufficientVariablesMessage = 'Maximum number of variables for the input is only 6'
         } else if (maxMintermInput > 63) {
             sufficientVariablesMessage = 'Minterm value greater than 63 is invalid as the maximum number of variables for the input is only 6'
         } else {

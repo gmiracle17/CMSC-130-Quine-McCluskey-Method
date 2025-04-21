@@ -354,14 +354,13 @@ function canCombine(binary1, binary2) {
         if(binary1[index] !== binary2[index]) {
             newBinary += '_'; // adds an underscore on the index where binary1 and binary2 differs
             difference++; 
-            if (difference > 1) return null; // returns null if binary1 and binary2 are not different by only 1 bit/variable
         }
         else {
             newBinary += binary1[index]; 
         }
     }
 
-    return newBinary;
+    return difference === 1 ? newBinary : null; // returns null if binary1 and binary2 are not different by only 1 bit/variable
 
 }
 
