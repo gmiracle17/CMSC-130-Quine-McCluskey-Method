@@ -116,7 +116,7 @@ function PrimeImplicantTable({ variables, minterms, mintermsList, binaryList, se
     /**
      * Greedy algorithm to select needed non-essential prime implicants
      * 
-     * 1. Get prime implicant from primeImplicantsList
+     * 1. Get prime implicant from primeImplicantsList (start from last element to consider implicants with the least number of variables first)
      * 2.1 If already contained in essentialPrimeImplicants or neededPrimeImplicants, skip to next prime implicant.
      * 2.2 If not, store uncovered minterms it covers in currentlyCovered
      * 3.1 If currentlyCovered > mostCoveredMaxterms, set primeImplicant as neededPrimeImplicant and currentlyCovered as mostCoveredMaxterms
@@ -133,7 +133,7 @@ function PrimeImplicantTable({ variables, minterms, mintermsList, binaryList, se
         let neededPrimeImplicant = null;
         let mostCoveredMaxterms = [];
 
-        for (let index = 0; index < primeImplicantsList.length; index++) {
+        for (let index = primeImplicantsList.length - 1; index >= 0; index--) {
             const primeImplicant = primeImplicantsList[index];
 
             if (essentialPrimeImplicants.has(primeImplicant) || neededNonessentialPrimeImplicants.has(primeImplicant)) continue;
