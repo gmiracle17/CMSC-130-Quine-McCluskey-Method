@@ -111,8 +111,7 @@ function SolveButton({mintermsInput, variablesInput, HandleInputs, setMintermsAr
         // if input is correct, proceed to pairwise simplification
         if (message === '') {
             setArrays(); 
-            setActiveTab('pairwise'); 
-            console.log("Proceed to next step"); 
+            setActiveTab('pairwise');  
         } 
         else { // else display the message
             message = message + "Please try again."
